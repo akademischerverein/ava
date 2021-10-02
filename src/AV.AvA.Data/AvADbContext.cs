@@ -48,6 +48,5 @@ namespace AV.AvA.Data
                     .HasDefaultValueSql("now()");
             });
         }
-
     }
 }

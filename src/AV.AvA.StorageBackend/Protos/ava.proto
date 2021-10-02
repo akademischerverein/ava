@@ -18,7 +18,6 @@ service PersonVersion {
 service Login {
     rpc CreateLoginToken (CreateLoginTokenRequest) returns (CreateLoginTokenReply);
     rpc LoginByToken (LoginByTokenRequest) returns (LoginByTokenRequest);
-    rpc GetBearerTokenInfo (GetBearerTokenInfoRequest) returns (GetBearerTokenInfoReply);
 }
 
 message GetAllRequest {
@@ -69,14 +68,6 @@ message LoginByTokenRequest {
 
 message LoginByTokenReply {
     string bearerToken = 1;
-}
-
-message GetBearerTokenInfoRequest {
-}
-
-message GetBearerTokenInfoReply {
-    int32 AvId = 1;
-    bool HasWritePermission = 2;
 }
 
 message PersonVersionReply {

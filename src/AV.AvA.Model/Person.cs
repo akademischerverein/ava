@@ -52,4 +52,6 @@ public class Person
     public List<StatusEreignis> Status { get; set; } = default!;
 
     public List<Beziehung> Beziehungen { get; set; } = default!;
+
+    public bool AvASchreibzugriff { get; set; }
 }
