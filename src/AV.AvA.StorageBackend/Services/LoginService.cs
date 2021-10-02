@@ -34,7 +34,7 @@ public class LoginService : Login.LoginBase
             .AsNoTracking()
             .ToListAsync();
 
-        var avid = people.SelectMany(p => p.Person.Emails.Select(em => (em.Adresse, (int?)p.AvId)))
+        var avid = people.SelectMany(p => p.DeserializePerson().Emails.Select(em => (em.Adresse, (int?)p.AvId)))
             .Where(x => StringComparer.OrdinalIgnoreCase.Equals(x.Adresse, request.EMail))
             .Select(x => x.Item2)
             .FirstOrDefault();
@@ -44,7 +44,7 @@ public class LoginService : Login.LoginBase
         }
 
         var token = WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(16));
-        var loginToken = new LoginToken
+        var loginToken = new StorageModel.LoginToken
         {
             Token = token,
             ValidUntil = _clock.GetCurrentInstant() + Duration.FromMinutes(15),
@@ -94,7 +94,7 @@ public class LoginService : Login.LoginBase
             new Claim(ClaimTypes.Name, loginToken.AvId.ToString()),
             new Claim(ClaimTypes.Role, "Reader"),
         };
-        if (person.Person.AvASchreibzugriff)
+        if (person.DeserializePerson().AvASchreibzugriff)
         {
             claims.Add(new Claim(ClaimTypes.Role, "Writer"));
         }

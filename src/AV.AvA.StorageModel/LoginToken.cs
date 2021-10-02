@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NodaTime;
 
-namespace AV.AvA.Model
+namespace AV.AvA.StorageModel
 {
     public class LoginToken
     {

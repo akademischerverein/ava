@@ -5,6 +5,7 @@ using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 using NodaTime.Serialization.Protobuf;
 using Status = Grpc.Core.Status;
+using StorageModel = AV.AvA.StorageModel;
 
 namespace AV.AvA.StorageBackend.Services
 {
@@ -39,19 +40,20 @@ namespace AV.AvA.StorageBackend.Services
 
         public override async Task<CreateNewPersonVersionReply> CreateNewPersonVersion(CreateNewPersonVersionRequest request, ServerCallContext context)
         {
+            EnsurePersonDeserializable(request.Person);
+
             var any = await _dbContext.PersonVersions.AnyAsync(p => p.AvId == request.AvId);
             if (!any)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Unknown AvId"));
             }
 
-            var pv = new Model.PersonVersion
+            var pv = new StorageModel.PersonVersion
             {
                 AvId = request.AvId,
                 ComitterAvId = null, // TODO
                 CommitMessage = request.CommitMessage,
-                Person = JsonSerializer.Deserialize<Person>(request.Person)
-                    ?? throw new RpcException(new Status(StatusCode.InvalidArgument, "No person data found")),
+                Person = request.Person,
                 Software = request.Software,
             };
             _dbContext.PersonVersions.Add(pv);
@@ -66,6 +68,8 @@ namespace AV.AvA.StorageBackend.Services
 
         public override async Task<CreateNewPersonReply> CreateNewPerson(CreateNewPersonRequest request, ServerCallContext context)
         {
+            EnsurePersonDeserializable(request.Person);
+
             using var tran = await _dbContext.Database.BeginTransactionAsync();
             await _dbContext.Database.ExecuteSqlRawAsync("LOCK TABLE person_versions IN ACCESS EXCLUSIVE;");
 
@@ -79,13 +83,12 @@ namespace AV.AvA.StorageBackend.Services
                 avId += 97;
             }
 
-            var pv = new Model.PersonVersion
+            var pv = new StorageModel.PersonVersion
             {
                 AvId = avId,
                 ComitterAvId = null, // TODO
                 CommitMessage = request.CommitMessage,
-                Person = JsonSerializer.Deserialize<Person>(request.Person)
-                    ?? throw new RpcException(new Status(StatusCode.InvalidArgument, "No person data found")),
+                Person = request.Person,
                 Software = request.Software,
             };
             _dbContext.PersonVersions.Add(pv);
@@ -100,18 +103,30 @@ namespace AV.AvA.StorageBackend.Services
             };
         }
 
-        private static PersonVersionReply MapToReply(PersonVersion pv) => new()
+        private static void EnsurePersonDeserializable(string json)
+        {
+            try
+            {
+                var testDeser = JsonSerializer.Deserialize<Person>(json);
+            }
+            catch (JsonException je)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "no valid person json given", je));
+            }
+        }
+
+        private static PersonVersionReply MapToReply(StorageModel.PersonVersion pv) => new()
         {
             PersonVersionId = pv.PersonVersionId,
             AvId = pv.AvId,
             ComitterAvId = pv.ComitterAvId,
             CommitMessage = pv.CommitMessage,
             CommittedAt = pv.CommittedAt.ToTimestamp(),
-            Person = JsonSerializer.Serialize(pv.Person),
+            Person = pv.Person,
             Software = pv.Software,
         };
 
-        private static async Task YieldToResponseStream(IQueryable<PersonVersion> q, IServerStreamWriter<PersonVersionReply> responseStream)
+        private static async Task YieldToResponseStream(IQueryable<StorageModel.PersonVersion> q, IServerStreamWriter<PersonVersionReply> responseStream)
         {
             await foreach (var p in q.AsAsyncEnumerable())
             {
