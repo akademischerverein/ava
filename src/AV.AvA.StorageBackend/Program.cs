@@ -1,6 +1,9 @@
 using AV.AvA.Data;
+using AV.AvA.StorageBackend;
 using AV.AvA.StorageBackend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,25 @@ builder.Services.AddNpgsql<AvADbContext>(
 
 // Add services to the container.
 builder.Services.AddGrpc();
+
+var jwtSecret = builder.Configuration.GetValue<string>("JwtSecret");
+var key = JwtKeyDerivation.DeriveKey(jwtSecret);
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+    };
+});
 
 var app = builder.Build();
 
