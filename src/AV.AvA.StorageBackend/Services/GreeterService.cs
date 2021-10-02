@@ -1,7 +1,7 @@
-using AV.AVA.StorageBackend;
+using AV.AvA.StorageBackend;
 using Grpc.Core;
 
-namespace AV.AVA.StorageBackend.Services
+namespace AV.AvA.StorageBackend.Services
 {
     public class GreeterService : Greeter.GreeterBase
     {

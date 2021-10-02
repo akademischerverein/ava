@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "AV.AVA.StorageBackend";
+option csharp_namespace = "AV.AvA.StorageBackend";
 
 package greet;
 

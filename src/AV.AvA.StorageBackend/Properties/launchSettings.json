@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "AV.AVA.StorageBackend": {
+    "AV.AvA.StorageBackend": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
