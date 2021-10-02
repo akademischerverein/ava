@@ -5,5 +5,8 @@ public enum BeziehungsTyp
     Lebenspartner,
     Enkel,
     Kind,
+    TanteOnkel,
+    NichteNeffe,
+    Geschwister,
     Elternteil
 }

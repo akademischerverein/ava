@@ -17,7 +17,7 @@ namespace AV.AvA.Data
 
         public DbSet<PersonVersion> PersonVersions { get; set; } = default!;
 
-        public DbSet<AuthToken> AuthTokens { get; set; } = default!;
+        public DbSet<LoginToken> AuthTokens { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,7 +28,7 @@ namespace AV.AvA.Data
                     .HasColumnType("jsonb");
             });
 
-            modelBuilder.Entity<AuthToken>(b =>
+            modelBuilder.Entity<LoginToken>(b =>
             {
                 b.HasIndex(at => at.Token)
                     .IsUnique();

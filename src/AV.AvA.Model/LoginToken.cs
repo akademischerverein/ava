@@ -5,9 +5,9 @@ using NodaTime;
 
 namespace AV.AvA.Model
 {
-    public class AuthToken
+    public class LoginToken
     {
-        public int AuthTokenId { get; set; }
+        public int LoginTokenId { get; set; }
 
         public string Token { get; set; }
 

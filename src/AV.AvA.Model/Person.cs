@@ -7,11 +7,11 @@ namespace AV.AvA.Model
 {
     public class Person
     {
-        public string Geschlecht;
+        public Geschlecht Geschlecht;
         public string PraefixTitel;
         public string Vorname;
         public string Zweitnamen;
-        public string Spitznamen;
+        public List<string> Spitznamen;
         public string NachnamePraefix;
         public string Nachname;
         public string SuffixTitel;
@@ -29,7 +29,7 @@ namespace AV.AvA.Model
         public List<Arbeitgeber> Arbeitgeber;
         public List<Ausbildung> Ausbildungen;
         public List<Messenger> Messenger;
-        public List<Status> Status;
+        public List<StatusEreignis> Status;
         public List<Beziehung> Beziehungen;
     }
 }

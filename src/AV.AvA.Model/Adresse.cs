@@ -5,8 +5,8 @@ namespace AV.AvA.Model;
 
 public class Adresse
 {
-    public ZonedDateTime GueltigVon;
-    public ZonedDateTime GueltigBis;
+    public ZonedDateTime? GueltigVon;
+    public ZonedDateTime? GueltigBis;
 
     public string Strasse;
     public string PLZ;

@@ -4,52 +4,77 @@ option csharp_namespace = "AV.AvA";
 
 package ava;
 
-service Person {
-  rpc GetAllCurrent (GetAllCurrentRequest) returns (stream GetAllCurrentReply);
-  rpc GetAllByAvId (GetAllByAvIdRequest) returns (stream GetAllByAvIdReply);
-  rpc Insert (InsertRequest) returns (InsertReply);
-  rpc Update (UpdateRequest) returns (UpdateReply);
+import "google/protobuf/timestamp.proto";
+
+service PersonVersion {
+  rpc GetAll (GetAllRequest) returns (stream PersonVersionReply);
+  rpc GetAllCurrent (GetAllCurrentRequest) returns (stream PersonVersionReply);
+  rpc GetAllByAvId (GetAllByAvIdRequest) returns (stream PersonVersionReply);
+  rpc CreateNewPerson (CreateNewPersonRequest) returns (CreateNewPersonReply);
+  rpc CreateNewPersonVersion (CreateNewPersonVersionRequest) returns (CreateNewPersonVersionReply);
 }
 
 service Login {
+    rpc CreateLoginToken (CreateLoginTokenRequest) returns (CreateLoginTokenReply);
     rpc SendLoginToken (SendLoginTokenRequest) returns (SendLoginTokenReply);
 }
 
-message GetAllCurrentRequest {
+message GetAllRequest {
+    int32 highestKnownPersonVersionId = 1;
 }
 
-message GetAllCurrentReply {
+message GetAllCurrentRequest {
+    int32 highestKnownPersonVersionId = 1;
 }
 
 message GetAllByAvIdRequest {
     int32 avId = 1;
+    int32 startWithPersonVersionId = 2;
 }
 
-message GetAllByAvIdReply {
-}
-
-message InsertRequest {
+message CreateNewPersonRequest {
     string person = 1;
+    string commitMessage = 3;
 }
 
-message InsertReply {
+message CreateNewPersonReply {
     int32 avId = 1;
+    int64 personVersionId = 2;
+    google.protobuf.Timestamp committedAt = 3;
 }
 
-message UpdateRequest {
+message CreateNewPersonVersionRequest {
     int32 avId = 1;
     string person = 2;
+    string commitMessage = 4;
 }
 
-message UpdateReply {
+message CreateNewPersonVersionReply {
     int32 personVersionId = 1;
+    google.protobuf.Timestamp committedAt = 2;
 }
 
 message SendLoginTokenRequest {
-    int32 avId = 1;
-    string person = 2;
+    string token = 1;
 }
 
 message SendLoginTokenReply {
+}
+
+message CreateLoginTokenRequest {
+    string eMail = 1;
+}
+
+message CreateLoginTokenReply {
+    string token = 1;
+}
+
+message PersonVersionReply {
     int32 personVersionId = 1;
+    int32 avId = 2;
+    string person = 3;
+    google.protobuf.Int32Value comitterAvId = 4;
+    google.protobuf.Timestamp committedAt = 5;
+    string commitMessage = 6;
+    string software = 7;
 }

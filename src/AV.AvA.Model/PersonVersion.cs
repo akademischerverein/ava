@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using NodaTime;
 
 namespace AV.AvA.Model
 {
@@ -11,5 +12,13 @@ namespace AV.AvA.Model
         public int AvId { get; set; }
 
         public Person Person { get; set; }
+
+        public int? ComitterAvId { get; set; }
+
+        public Instant CommittedAt { get; set; }
+
+        public string CommitMessage { get; set; }
+
+        public string Software { get; set; }
     }
 }

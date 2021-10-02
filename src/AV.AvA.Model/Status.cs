@@ -4,9 +4,9 @@ namespace AV.AvA.Model;
 
 public class Status
 {
-    public ZonedDateTime GueltigVon;
-    public ZonedDateTime GueltigBis;
+    public ZonedDateTime? GueltigVon;
+    public ZonedDateTime? GueltigBis;
 
-    public string? Grund;
+    public string? LetzterEreignisGrund;
     public StatusTyp Typ;
 }

@@ -2,7 +2,11 @@ namespace AV.AvA.Model;
 
 public enum MessengerTyp
 {
-    Telegram,
+    Facebook,
+    Instagram,
+    LinkedIn,
+    MSN,
     Skype,
-    MSN
+    Telegram,
+    Xing,
 }
