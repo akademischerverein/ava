@@ -94,8 +94,10 @@ namespace AV.AvA.Data.Migrations
                         .HasColumnName("commit_message");
 
                     b.Property<Instant>("CommittedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("committed_at");
+                        .HasColumnName("committed_at")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<Person>("Person")
                         .IsRequired()

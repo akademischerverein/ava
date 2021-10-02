@@ -37,7 +37,7 @@ namespace AV.AvA.Data.Migrations
                     av_id = table.Column<int>(type: "integer", nullable: false),
                     person = table.Column<Person>(type: "jsonb", nullable: false),
                     comitter_av_id = table.Column<int>(type: "integer", nullable: true),
-                    committed_at = table.Column<Instant>(type: "timestamp with time zone", nullable: false),
+                    committed_at = table.Column<Instant>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     commit_message = table.Column<string>(type: "text", nullable: false),
                     software = table.Column<string>(type: "text", nullable: false)
                 },
