@@ -7,6 +7,9 @@
 *.sh eol=lf
 *.ps1 eol=lf
 
+# Ensure batch scripts use CRLF line endings
+*.bat eol=crlf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #

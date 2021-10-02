@@ -11,6 +11,8 @@ indent_style = space
 trim_trailing_whitespace = true
 guidelines = 140
 max_line_length = 140
+end_of_line = lf
+insert_final_newline = true
 
 # Code files
 [*.{cs,csx,vb,vbx}]
