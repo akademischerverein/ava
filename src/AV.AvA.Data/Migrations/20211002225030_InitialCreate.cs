@@ -1,5 +1,4 @@
-﻿using AV.AvA.Model;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -35,7 +34,7 @@ namespace AV.AvA.Data.Migrations
                     person_version_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     av_id = table.Column<int>(type: "integer", nullable: false),
-                    person = table.Column<Person>(type: "jsonb", nullable: false),
+                    person = table.Column<string>(type: "jsonb", nullable: false),
                     comitter_av_id = table.Column<int>(type: "integer", nullable: true),
                     committed_at = table.Column<Instant>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     commit_message = table.Column<string>(type: "text", nullable: false),
