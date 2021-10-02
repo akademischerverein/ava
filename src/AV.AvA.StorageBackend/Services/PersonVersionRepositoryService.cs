@@ -13,11 +13,13 @@ namespace AV.AvA.StorageBackend.Services
     {
         private readonly ILogger<PersonVersionRepositoryService> _l;
         private readonly AvADbContext _dbContext;
+        private readonly JsonSerializerOptions _jsonOpts;
 
-        public PersonVersionRepositoryService(ILogger<PersonVersionRepositoryService> logger, AvADbContext dbContext)
+        public PersonVersionRepositoryService(ILogger<PersonVersionRepositoryService> logger, AvADbContext dbContext, JsonSerializerOptions jsonOpts)
         {
             _l = logger;
             _dbContext = dbContext;
+            _jsonOpts = jsonOpts;
         }
 
         public override Task GetAll(GetAllRequest request, IServerStreamWriter<PersonVersionReply> responseStream, ServerCallContext ctx)
@@ -96,18 +98,6 @@ namespace AV.AvA.StorageBackend.Services
             };
         }
 
-        private static void EnsurePersonDeserializable(string json)
-        {
-            try
-            {
-                var testDeser = JsonSerializer.Deserialize<Person>(json);
-            }
-            catch (JsonException je)
-            {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, "no valid person json given", je));
-            }
-        }
-
         private static PersonVersionReply MapToReply(StorageModel.PersonVersion pv) => new()
         {
             PersonVersionId = pv.PersonVersionId,
@@ -124,6 +114,18 @@ namespace AV.AvA.StorageBackend.Services
             await foreach (var p in q.AsAsyncEnumerable())
             {
                 await responseStream.WriteAsync(MapToReply(p));
+            }
+        }
+
+        private void EnsurePersonDeserializable(string json)
+        {
+            try
+            {
+                var testDeser = JsonSerializer.Deserialize<Person>(json, _jsonOpts);
+            }
+            catch (JsonException je)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "no valid person json given", je));
             }
         }
     }
