@@ -189,6 +189,10 @@ dotnet_diagnostic.SA1101.severity = silent
 # SA1602: Enumeration items should be documented
 dotnet_diagnostic.SA1602.severity = silent
 
+# SA1516: Adjacent C# elements are not separated by a blank line.
+# this does not work with new C# top level statements
+dotnet_diagnostic.SA1516.severity = silent
+
 [*.{cs,vb}]
 
 ## Naming styles
