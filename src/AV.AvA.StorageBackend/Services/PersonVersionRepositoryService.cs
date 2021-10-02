@@ -71,17 +71,10 @@ namespace AV.AvA.StorageBackend.Services
             EnsurePersonDeserializable(request.Person);
 
             using var tran = await _dbContext.Database.BeginTransactionAsync();
-            await _dbContext.Database.ExecuteSqlRawAsync("LOCK TABLE person_versions IN ACCESS EXCLUSIVE;");
+            await _dbContext.Database.ExecuteSqlRawAsync("LOCK TABLE person_versions IN ACCESS EXCLUSIVE MODE;");
 
-            var avId = await _dbContext.PersonVersions.MaxAsync(p => p.AvId);
-            if (avId <= 0)
-            {
-                avId = 100104;
-            }
-            else
-            {
-                avId += 97;
-            }
+            var avId = await _dbContext.PersonVersions.MaxAsync(p => (int?)p.AvId) ?? 100104 - 97;
+            avId += 97;
 
             var pv = new StorageModel.PersonVersion
             {
