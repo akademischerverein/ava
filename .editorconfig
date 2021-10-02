@@ -186,6 +186,9 @@ dotnet_diagnostic.SA1309.severity = silent
 # SA1101: A call to an instance member of the local class or a base class is not prefixed with 'this.', within a C# code file.
 dotnet_diagnostic.SA1101.severity = silent
 
+# SA1602: Enumeration items should be documented
+dotnet_diagnostic.SA1602.severity = silent
+
 [*.{cs,vb}]
 
 ## Naming styles
