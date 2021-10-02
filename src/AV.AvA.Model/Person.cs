@@ -29,11 +29,11 @@ public class Person
 
     public string Geburtsort { get; set; } = default!;
 
-    public LocalDate Geburtsdatum { get; set; }
+    public LocalDate? Geburtsdatum { get; set; }
 
     public string Kolonie { get; set; } = default!;
 
-    public int Debitorennummer { get; set; }
+    public int? Debitorennummer { get; set; }
 
     public string Webseite { get; set; } = default!;
 
