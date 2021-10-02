@@ -7,17 +7,20 @@ namespace AV.AvA.BlazorWasmClient
 {
     public class AutoMapperProfile : Profile
     {
-        public AutoMapperProfile()
+        private readonly JsonSerializerOptions _jsonOpts;
+
+        public AutoMapperProfile(JsonSerializerOptions jsonOpts)
         {
             CreateMap<PersonVersionReply, Model.PersonVersion>()
                 .ForMember(
                     dest => dest.Person,
                     opt => opt.MapFrom((src, dest) =>
-                        JsonSerializer.Deserialize<Model.Person>(src.Person)))
+                        JsonSerializer.Deserialize<Model.Person>(src.Person, _jsonOpts)))
                 .ForMember(
                     dest => dest.CommittedAt,
                     opt => opt.MapFrom((src, dest) =>
                         Instant.FromDateTimeOffset(src.CommittedAt.ToDateTimeOffset())));
+            _jsonOpts = jsonOpts;
         }
     }
 }
