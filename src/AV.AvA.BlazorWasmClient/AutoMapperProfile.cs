@@ -8,6 +8,8 @@ namespace AV.AvA.BlazorWasmClient
 {
     public class AutoMapperProfile : Profile
     {
+        // ToDo: get the serializer opts from DI
+
         private static readonly JsonSerializerOptions _jsonOpt = GetNodaTimeSTJSettings();
 
         public AutoMapperProfile()
