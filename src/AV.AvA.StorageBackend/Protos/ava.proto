@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+option csharp_namespace = "AV.AvA";
+
+package ava;
+
+service Person {
+  rpc GetAllCurrent (GetAllCurrentRequest) returns (stream GetAllCurrentReply);
+  rpc GetAllByAvId (GetAllByAvIdRequest) returns (stream GetAllByAvIdReply);
+  rpc Insert (InsertRequest) returns (InsertReply);
+  rpc Update (UpdateRequest) returns (UpdateReply);
+}
+
+service Login {
+    rpc SendLoginToken (SendLoginTokenRequest) returns (SendLoginTokenReply);
+}
+
+message GetAllCurrentRequest {
+}
+
+message GetAllCurrentReply {
+}
+
+message GetAllByAvIdRequest {
+    int32 avId = 1;
+}
+
+message GetAllByAvIdReply {
+}
+
+message InsertRequest {
+    string person = 1;
+}
+
+message InsertReply {
+    int32 avId = 1;
+}
+
+message UpdateRequest {
+    int32 avId = 1;
+    string person = 2;
+}
+
+message UpdateReply {
+    int32 personVersionId = 1;
+}
+
+message SendLoginTokenRequest {
+    int32 avId = 1;
+    string person = 2;
+}
+
+message SendLoginTokenReply {
+    int32 personVersionId = 1;
+}
