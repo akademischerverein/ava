@@ -17,7 +17,8 @@ service PersonVersion {
 
 service Login {
     rpc CreateLoginToken (CreateLoginTokenRequest) returns (CreateLoginTokenReply);
-    rpc SendLoginToken (SendLoginTokenRequest) returns (SendLoginTokenReply);
+    rpc LoginByToken (LoginByTokenRequest) returns (LoginByTokenRequest);
+    rpc GetBearerTokenInfo (GetBearerTokenInfoRequest) returns (GetBearerTokenInfoReply);
 }
 
 message GetAllRequest {
@@ -55,19 +56,27 @@ message CreateNewPersonVersionReply {
     google.protobuf.Timestamp committedAt = 2;
 }
 
-message SendLoginTokenRequest {
-    string token = 1;
-}
-
-message SendLoginTokenReply {
-}
-
 message CreateLoginTokenRequest {
     string eMail = 1;
 }
 
 message CreateLoginTokenReply {
+}
+
+message LoginByTokenRequest {
     string token = 1;
+}
+
+message LoginByTokenReply {
+    string bearerToken = 1;
+}
+
+message GetBearerTokenInfoRequest {
+}
+
+message GetBearerTokenInfoReply {
+    int32 AvId = 1;
+    bool HasWritePermission = 2;
 }
 
 message PersonVersionReply {

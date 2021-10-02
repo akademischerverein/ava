@@ -17,7 +17,16 @@ namespace AV.AvA.Data
 
         public DbSet<PersonVersion> PersonVersions { get; set; } = default!;
 
-        public DbSet<LoginToken> AuthTokens { get; set; } = default!;
+        public DbSet<LoginToken> LoginTokens { get; set; } = default!;
+
+        public IQueryable<int> GetCurrentPersonVersionIds() =>
+            PersonVersions
+                .GroupBy(pv => pv.AvId)
+                .Select(g => g.Max(pv => pv.PersonVersionId));
+
+        public IQueryable<PersonVersion> GetCurrentPersonVersions() =>
+            PersonVersions
+                .Where(pv => GetCurrentPersonVersionIds().Contains(pv.PersonVersionId));
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,10 +43,11 @@ namespace AV.AvA.Data
                     .IsUnique();
                 b.HasIndex(at => at.AvId)
                     .IsUnique()
-                    .HasFilter("[valid_until] IS NOT NULL AND [used_at] IS NOT NULL");
+                    .HasFilter("valid_until IS NOT NULL AND used_at IS NOT NULL");
                 b.Property(at => at.CreatedAt)
                     .HasDefaultValueSql("now()");
             });
         }
+
     }
 }
