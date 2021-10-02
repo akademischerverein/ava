@@ -1,0 +1,19 @@
+﻿@using AV.AvA.Model
+<MudList Clickable="true">
+	@foreach(var pv in PersonVersions)
+	{
+		var href = $"/Details/{pv.AvId}";
+		var p = pv.Person;
+		<MudListItem Href="@href"Icon="@Icons.Material.Filled.AccountCircle">
+			@p.Vorname
+			@p.Zweitnamen
+			@p.NachnamePraefix
+			@p.Nachname
+		</MudListItem>
+	}
+</MudList>
+
+@code {
+	[Parameter]
+	public IReadOnlyList<PersonVersion> PersonVersions { get; set; }
+}
