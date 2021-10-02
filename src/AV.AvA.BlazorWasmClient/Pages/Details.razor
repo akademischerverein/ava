@@ -1,0 +1,10 @@
+﻿@page "/Details/{AvId:int}"
+@using AV.AvA.Model
+@layout AuthedLayout
+
+These are the details of the person with AvId @AvId! Great!
+
+@code {
+	[Parameter]
+	public int AvId { get; set; }
+}
