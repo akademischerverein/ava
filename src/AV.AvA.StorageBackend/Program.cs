@@ -33,7 +33,8 @@ builder.Services.AddNpgsql<AvADbContext>(
 #endif
     });
 
-// Add services to the container.
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 builder.Services.AddGrpc();
 
 var jwtSecret = builder.Configuration.GetValue<string>("JwtSecret");

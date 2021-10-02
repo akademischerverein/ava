@@ -1,10 +1,22 @@
 ﻿@page "/Details/{AvId:int}"
+@using AV.AvA.BlazorWasmClient.Services
 @using AV.AvA.Model
 @layout AuthedLayout
+@inject IPersonVersionAccessor pva
 
 These are the details of the person with AvId @AvId! Great!
+
+@_pv?.Person?.Vorname
+@_pv?.Person?.Nachname
 
 @code {
 	[Parameter]
 	public int AvId { get; set; }
+
+	private PersonVersion? _pv;
+
+	protected override async Task OnParametersSetAsync()
+	{
+		_pv = await pva.GetCurrentAsync(AvId);
+	}
 }
