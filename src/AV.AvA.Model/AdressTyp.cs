@@ -7,5 +7,5 @@ public enum AdressTyp
     Temporaer,
     Studien,
     Eltern,
-    Andere
+    Andere,
 }

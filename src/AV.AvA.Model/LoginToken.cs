@@ -9,7 +9,7 @@ namespace AV.AvA.Model
     {
         public int LoginTokenId { get; set; }
 
-        public string Token { get; set; }
+        public string Token { get; set; } = default!;
 
         public int AvId { get; set; }
 
@@ -18,6 +18,5 @@ namespace AV.AvA.Model
         public Instant? ValidUntil { get; set; }
 
         public Instant? UsedAt { get; set; }
-
     }
 }

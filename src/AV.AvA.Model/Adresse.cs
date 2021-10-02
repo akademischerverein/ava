@@ -5,15 +5,23 @@ namespace AV.AvA.Model;
 
 public class Adresse
 {
-    public ZonedDateTime? GueltigVon;
-    public ZonedDateTime? GueltigBis;
+    public ZonedDateTime? GueltigVon { get; set; }
 
-    public string Strasse;
-    public string PLZ;
-    public string Ort;
-    public string Land;
-    public string? Telefon;
-    public string? Fax;
-    public AdressTyp Typ;
-    public List<AdressFlag> Flags;
+    public ZonedDateTime? GueltigBis { get; set; }
+
+    public string Strasse { get; set; } = default!;
+
+    public string PLZ { get; set; } = default!;
+
+    public string Ort { get; set; } = default!;
+
+    public string Land { get; set; } = default!;
+
+    public string? Telefon { get; set; }
+
+    public string? Fax { get; set; }
+
+    public AdressTyp Typ { get; set; }
+
+    public List<AdressFlag> Flags { get; set; } = default!;
 }

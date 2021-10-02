@@ -4,11 +4,15 @@ namespace AV.AvA.Model;
 
 public class Arbeitgeber
 {
-    public ZonedDateTime? GueltigVon;
-    public ZonedDateTime? GueltigBis;
+    public ZonedDateTime? GueltigVon { get; set; }
 
-    public string Name;
-    public string? Abteilung;
-    public string? Position;
-    public Adresse Adresse;
+    public ZonedDateTime? GueltigBis { get; set; }
+
+    public string Name { get; set; } = default!;
+
+    public string? Abteilung { get; set; }
+
+    public string? Position { get; set; }
+
+    public Adresse Adresse { get; set; } = default!;
 }

@@ -5,10 +5,13 @@ namespace AV.AvA.Model;
 
 public class Email
 {
-    public ZonedDateTime? GueltigVon;
-    public ZonedDateTime? GueltigBis;
+    public ZonedDateTime? GueltigVon { get; set; }
 
-    public string Adresse;
-    public AdressTyp Typ;
-    public List<EmailFlag> Flags;
+    public ZonedDateTime? GueltigBis { get; set; }
+
+    public string Adresse { get; set; } = default!;
+
+    public AdressTyp Typ { get; set; }
+
+    public List<EmailFlag> Flags { get; set; } = default!;
 }

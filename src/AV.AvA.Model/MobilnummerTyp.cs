@@ -9,6 +9,6 @@ namespace AV.AvA.Model
         Primaer,
         Geschaeftlich,
         Temporaer,
-        Andere
+        Andere,
     }
 }

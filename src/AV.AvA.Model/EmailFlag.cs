@@ -11,6 +11,6 @@ namespace AV.AvA.Model
         Einladung,
         VerteilerBundesleben,
         VerteilerAktivitas,
-        Geschaeftlich
+        Geschaeftlich,
     }
 }

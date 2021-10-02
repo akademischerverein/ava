@@ -4,12 +4,17 @@ namespace AV.AvA.Model;
 
 public class Beziehung
 {
-    public ZonedDateTime? GueltigVon;
-    public ZonedDateTime? GueltigBis;
+    public ZonedDateTime? GueltigVon { get; set; }
 
-    public string? Vorname;
-    public string? Nachname;
-    public LocalDate? VerstorbenAm;
-    public int? AvId;
-    public BeziehungsTyp Typ;
+    public ZonedDateTime? GueltigBis { get; set; }
+
+    public string? Vorname { get; set; }
+
+    public string? Nachname { get; set; }
+
+    public LocalDate? VerstorbenAm { get; set; }
+
+    public int? AvId { get; set; }
+
+    public BeziehungsTyp Typ { get; set; }
 }

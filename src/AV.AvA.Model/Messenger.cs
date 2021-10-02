@@ -4,10 +4,11 @@ namespace AV.AvA.Model;
 
 public class Messenger
 {
-    public ZonedDateTime? GueltigVon;
-    public ZonedDateTime? GueltigBis;
+    public ZonedDateTime? GueltigVon { get; set; }
 
-    public string Name;
-    public MessengerTyp Typ;
+    public ZonedDateTime? GueltigBis { get; set; }
 
+    public string Name { get; set; } = default!;
+
+    public MessengerTyp Typ { get; set; }
 }

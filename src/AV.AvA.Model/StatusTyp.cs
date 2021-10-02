@@ -20,5 +20,5 @@ public enum StatusTyp
     Lebenspartner,
     StimmrechtHG,
     Ausgeschieden,
-    Verstorben
+    Verstorben,
 }

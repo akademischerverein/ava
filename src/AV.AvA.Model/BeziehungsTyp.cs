@@ -8,5 +8,5 @@ public enum BeziehungsTyp
     TanteOnkel,
     NichteNeffe,
     Geschwister,
-    Elternteil
+    Elternteil,
 }

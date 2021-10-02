@@ -4,10 +4,13 @@ namespace AV.AvA.Model;
 
 public class Ausbildung
 {
-    public ZonedDateTime? GueltigVon;
-    public ZonedDateTime? GueltigBis;
+    public ZonedDateTime? GueltigVon { get; set; }
 
-    public string Name;
-    public string Abschluss;
-    public bool AbschlussErreicht;
+    public ZonedDateTime? GueltigBis { get; set; }
+
+    public string Name { get; set; } = default!;
+
+    public string Abschluss { get; set; } = default!;
+
+    public bool AbschlussErreicht { get; set; }
 }

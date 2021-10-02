@@ -5,6 +5,7 @@ option csharp_namespace = "AV.AvA";
 package ava;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 service PersonVersion {
   rpc GetAll (GetAllRequest) returns (stream PersonVersionReply);
