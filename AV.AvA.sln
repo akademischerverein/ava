@@ -8,13 +8,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A453CC0E-EBA0-4FE3-9376-567BB8A55C5F}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		src\Protos\ava.proto = src\Protos\ava.proto
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AV.AvA.Model", "src\AV.AvA.Model\AV.AvA.Model.csproj", "{2E22938D-809B-4306-9E1D-B549148AFE11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AV.AvA.Data", "src\AV.AvA.Data\AV.AvA.Data.csproj", "{C40813FB-62F4-42B5-AC1D-C3857BC9B901}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AV.AvA.BlazorWasmClient", "src\AV.AvA.BlazorWasmClient\AV.AvA.BlazorWasmClient.csproj", "{2BA63100-6F78-4157-A5D9-6C448CB79988}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AV.AvA.BlazorWasmClient", "src\AV.AvA.BlazorWasmClient\AV.AvA.BlazorWasmClient.csproj", "{2BA63100-6F78-4157-A5D9-6C448CB79988}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

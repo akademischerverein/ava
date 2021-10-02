@@ -1,7 +1,6 @@
 using System.Text.Json;
 using AV.AvA.Data;
 using AV.AvA.Model;
-using AV.AvA.StorageBackend;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 using NodaTime.Serialization.Protobuf;
@@ -9,12 +8,12 @@ using Status = Grpc.Core.Status;
 
 namespace AV.AvA.StorageBackend.Services
 {
-    public class PersonVersionService : AvA.PersonVersion.PersonVersionBase
+    public class PersonVersionRepositoryService : PersonVersionRepository.PersonVersionRepositoryBase
     {
-        private readonly ILogger<PersonVersionService> _l;
+        private readonly ILogger<PersonVersionRepositoryService> _l;
         private readonly AvADbContext _dbContext;
 
-        public PersonVersionService(ILogger<PersonVersionService> logger, AvADbContext dbContext)
+        public PersonVersionRepositoryService(ILogger<PersonVersionRepositoryService> logger, AvADbContext dbContext)
         {
             _l = logger;
             _dbContext = dbContext;

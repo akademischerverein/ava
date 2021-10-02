@@ -7,7 +7,7 @@ package ava;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-service PersonVersion {
+service PersonVersionRepository {
   rpc GetAll (GetAllRequest) returns (stream PersonVersionReply);
   rpc GetAllCurrent (GetAllCurrentRequest) returns (stream PersonVersionReply);
   rpc GetAllByAvId (GetAllByAvIdRequest) returns (stream PersonVersionReply);

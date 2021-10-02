@@ -13,7 +13,7 @@ using NodaTime;
 
 namespace AV.AvA.StorageBackend.Services;
 
-public class LoginService : AvA.Login.LoginBase
+public class LoginService : Login.LoginBase
 {
     private readonly IClock _clock;
     private readonly AvADbContext _dbContext;
