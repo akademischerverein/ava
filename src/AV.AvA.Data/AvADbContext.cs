@@ -34,7 +34,7 @@ namespace AV.AvA.Data
                     .IsUnique();
                 b.HasIndex(at => at.AvId)
                     .IsUnique()
-                    .HasFilter("[ValidUntil] IS NOT NULL AND [UsedAt] IS NOT NULL");
+                    .HasFilter("[valid_until] IS NOT NULL AND [used_at] IS NOT NULL");
                 b.Property(at => at.CreatedAt)
                     .HasDefaultValueSql("now()");
             });

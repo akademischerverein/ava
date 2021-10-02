@@ -4,21 +4,26 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var services = builder.Services;
+var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
 
-var conf = builder.Configuration;
+builder.Services.AddNpgsql<AvADbContext>(
+    connStr,
+    pgOpts =>
+    {
+        pgOpts.UseNodaTime();
+        pgOpts.MigrationsHistoryTable("__ef_migrations_history");
+    },
+    ctxOpts =>
+    {
+        ctxOpts.UseSnakeCaseNamingConvention();
+#if DEBUG
+        ctxOpts.EnableDetailedErrors();
+        ctxOpts.EnableSensitiveDataLogging();
+#endif
+    });
 
 // Add services to the container.
 builder.Services.AddGrpc();
-
-services.AddDbContextFactory<AvADbContext>(options =>
-{
-    options.UseNpgsql(conf.GetConnectionString("DefaultConnection"), o =>
-    {
-        o.UseNodaTime();
-        o.MigrationsHistoryTable("__ef_migrations_history");
-    });
-});
 
 var app = builder.Build();
 
