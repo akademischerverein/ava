@@ -35,6 +35,8 @@ namespace AV.AvA.Data
                 b.HasIndex(pv => pv.AvId);
                 b.Property(pv => pv.Person)
                     .HasColumnType("jsonb");
+                b.Property(at => at.CommittedAt)
+                    .HasDefaultValueSql("now()");
             });
 
             modelBuilder.Entity<LoginToken>(b =>

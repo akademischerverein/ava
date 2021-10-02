@@ -36,6 +36,7 @@ message GetAllByAvIdRequest {
 message CreateNewPersonRequest {
     string person = 1;
     string commitMessage = 3;
+    string software = 4;
 }
 
 message CreateNewPersonReply {
@@ -48,6 +49,7 @@ message CreateNewPersonVersionRequest {
     int32 avId = 1;
     string person = 2;
     string commitMessage = 4;
+    string software = 5;
 }
 
 message CreateNewPersonVersionReply {
