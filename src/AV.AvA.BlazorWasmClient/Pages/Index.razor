@@ -1,9 +1,26 @@
 ﻿@page "/"
+@using AV.AvA.Model
 @layout AuthedLayout
 
-<PageTitle>Index</PageTitle>
+<PersonList PersonVersions="x" />
 
-<h1>Hello, world!</h1>
+@code {
+	List<PersonVersion> x = new();
 
-Welcome to your new app.
-
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		var pv = new PersonVersion()
+		{
+			Person = new Person()
+			{
+				Vorname = "Georg",
+				Zweitnamen = "Zweitname",
+				Spitznamen = new List<string>() { "Spitzname" },
+				NachnamePraefix = "von",
+				Nachname = "Jung",
+			}
+		};
+		x.Add(pv);
+	}
+}
