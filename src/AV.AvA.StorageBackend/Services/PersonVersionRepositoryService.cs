@@ -19,76 +19,30 @@ namespace AV.AvA.StorageBackend.Services
             _dbContext = dbContext;
         }
 
-        public override async Task GetAll(GetAllRequest request, IServerStreamWriter<PersonVersionReply> responseStream, ServerCallContext ctx)
+        public override Task GetAll(GetAllRequest request, IServerStreamWriter<PersonVersionReply> responseStream, ServerCallContext ctx)
         {
             var personVersions = _dbContext.PersonVersions.Where(p => p.PersonVersionId > request.HighestKnownPersonVersionId);
-            foreach (var p in personVersions)
-            {
-                var reply = new PersonVersionReply
-                {
-                    PersonVersionId = p.PersonVersionId,
-                    AvId = p.AvId,
-                    ComitterAvId = p.ComitterAvId,
-                    CommitMessage = p.CommitMessage,
-                    CommittedAt = p.CommittedAt.ToTimestamp(),
-                    Person = JsonSerializer.Serialize(p.Person),
-                    Software = p.Software,
-                };
-                await responseStream.WriteAsync(reply);
-            }
+            return YieldToResponseStream(personVersions, responseStream);
         }
 
-        public override async Task GetAllCurrent(GetAllCurrentRequest request, IServerStreamWriter<PersonVersionReply> responseStream, ServerCallContext context)
+        public override Task GetAllCurrent(GetAllCurrentRequest request, IServerStreamWriter<PersonVersionReply> responseStream, ServerCallContext context)
         {
             var personVersions = _dbContext.GetCurrentPersonVersions().Where(p => p.PersonVersionId > request.HighestKnownPersonVersionId);
-            foreach (var p in personVersions)
-            {
-                var reply = new PersonVersionReply
-                {
-                    PersonVersionId = p.PersonVersionId,
-                    AvId = p.AvId,
-                    ComitterAvId = p.ComitterAvId,
-                    CommitMessage = p.CommitMessage,
-                    CommittedAt = p.CommittedAt.ToTimestamp(),
-                    Person = JsonSerializer.Serialize(p.Person),
-                    Software = p.Software,
-                };
-                await responseStream.WriteAsync(reply);
-            }
+            return YieldToResponseStream(personVersions, responseStream);
         }
 
-        public override async Task GetAllByAvId(GetAllByAvIdRequest request, IServerStreamWriter<PersonVersionReply> responseStream, ServerCallContext context)
+        public override Task GetAllByAvId(GetAllByAvIdRequest request, IServerStreamWriter<PersonVersionReply> responseStream, ServerCallContext context)
         {
             var personVersions = _dbContext.PersonVersions.Where(p => p.PersonVersionId >= request.StartWithPersonVersionId && p.AvId == request.AvId);
-            foreach (var p in personVersions)
-            {
-                var reply = new PersonVersionReply
-                {
-                    PersonVersionId = p.PersonVersionId,
-                    AvId = p.AvId,
-                    ComitterAvId = p.ComitterAvId,
-                    CommitMessage = p.CommitMessage,
-                    CommittedAt = p.CommittedAt.ToTimestamp(),
-                    Person = JsonSerializer.Serialize(p.Person),
-                    Software = p.Software,
-                };
-                await responseStream.WriteAsync(reply);
-            }
+            return YieldToResponseStream(personVersions, responseStream);
         }
 
         public override async Task<CreateNewPersonVersionReply> CreateNewPersonVersion(CreateNewPersonVersionRequest request, ServerCallContext context)
         {
-            if (!_dbContext.PersonVersions.Any(p => p.AvId == request.AvId))
+            var any = await _dbContext.PersonVersions.AnyAsync(p => p.AvId == request.AvId);
+            if (!any)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Unknown AvId"));
-            }
-
-            _dbContext.Database.BeginTransaction();
-            _dbContext.Database.ExecuteSqlRaw("LOCK TABLE person_versions IN ACCESS EXCLUSIVE;");
-            var pvId = _dbContext.PersonVersions.Max(p => p.PersonVersionId);
-            if (pvId <= 0)
-            {
-                pvId = 1;
             }
 
             var pv = new Model.PersonVersion
@@ -96,32 +50,26 @@ namespace AV.AvA.StorageBackend.Services
                 AvId = request.AvId,
                 ComitterAvId = null, // TODO
                 CommitMessage = request.CommitMessage,
-                Person = JsonSerializer.Deserialize<Person>(request.Person) ?? throw new RpcException(new Status(StatusCode.InvalidArgument, "No person data found")),
-                PersonVersionId = pvId,
+                Person = JsonSerializer.Deserialize<Person>(request.Person)
+                    ?? throw new RpcException(new Status(StatusCode.InvalidArgument, "No person data found")),
                 Software = request.Software,
             };
             _dbContext.PersonVersions.Add(pv);
-            await _dbContext.Database.CommitTransactionAsync();
+            await _dbContext.SaveChangesAsync();
 
-            var retPv = await _dbContext.PersonVersions.Where(p => p.PersonVersionId == pvId).FirstAsync();
             return new CreateNewPersonVersionReply
             {
-                CommittedAt = retPv.CommittedAt.ToTimestamp(),
-                PersonVersionId = retPv.PersonVersionId,
+                CommittedAt = pv.CommittedAt.ToTimestamp(),
+                PersonVersionId = pv.PersonVersionId,
             };
         }
 
         public override async Task<CreateNewPersonReply> CreateNewPerson(CreateNewPersonRequest request, ServerCallContext context)
         {
-            _dbContext.Database.BeginTransaction();
-            _dbContext.Database.ExecuteSqlRaw("LOCK TABLE person_versions IN ACCESS EXCLUSIVE;");
-            var pvId = _dbContext.PersonVersions.Max(p => p.PersonVersionId);
-            if (pvId <= 0)
-            {
-                pvId = 1;
-            }
+            using var tran = await _dbContext.Database.BeginTransactionAsync();
+            await _dbContext.Database.ExecuteSqlRawAsync("LOCK TABLE person_versions IN ACCESS EXCLUSIVE;");
 
-            var avId = _dbContext.PersonVersions.Max(p => p.AvId);
+            var avId = await _dbContext.PersonVersions.MaxAsync(p => p.AvId);
             if (avId <= 0)
             {
                 avId = 100104;
@@ -136,20 +84,39 @@ namespace AV.AvA.StorageBackend.Services
                 AvId = avId,
                 ComitterAvId = null, // TODO
                 CommitMessage = request.CommitMessage,
-                Person = JsonSerializer.Deserialize<Person>(request.Person) ?? throw new RpcException(new Status(StatusCode.InvalidArgument, "No person data found")),
-                PersonVersionId = pvId,
+                Person = JsonSerializer.Deserialize<Person>(request.Person)
+                    ?? throw new RpcException(new Status(StatusCode.InvalidArgument, "No person data found")),
                 Software = request.Software,
             };
             _dbContext.PersonVersions.Add(pv);
-            await _dbContext.Database.CommitTransactionAsync();
+            await _dbContext.SaveChangesAsync();
+            await tran.CommitAsync();
 
-            var retPv = await _dbContext.PersonVersions.Where(p => p.PersonVersionId == pvId).FirstAsync();
             return new CreateNewPersonReply
             {
-                AvId = retPv.AvId,
-                CommittedAt = retPv.CommittedAt.ToTimestamp(),
-                PersonVersionId = retPv.PersonVersionId,
+                AvId = avId,
+                CommittedAt = pv.CommittedAt.ToTimestamp(),
+                PersonVersionId = pv.PersonVersionId,
             };
+        }
+
+        private static PersonVersionReply MapToReply(PersonVersion pv) => new()
+        {
+            PersonVersionId = pv.PersonVersionId,
+            AvId = pv.AvId,
+            ComitterAvId = pv.ComitterAvId,
+            CommitMessage = pv.CommitMessage,
+            CommittedAt = pv.CommittedAt.ToTimestamp(),
+            Person = JsonSerializer.Serialize(pv.Person),
+            Software = pv.Software,
+        };
+
+        private static async Task YieldToResponseStream(IQueryable<PersonVersion> q, IServerStreamWriter<PersonVersionReply> responseStream)
+        {
+            await foreach (var p in q.AsAsyncEnumerable())
+            {
+                await responseStream.WriteAsync(MapToReply(p));
+            }
         }
     }
 }
