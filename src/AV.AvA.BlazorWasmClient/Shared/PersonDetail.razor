@@ -10,9 +10,19 @@
     <br />
     @PersonVersion.Person.Vorname
     @PersonVersion.Person.Zweitnamen
+    @foreach (var spitzname in PersonVersion.Person.Spitznamen)
+    {
+        @: "@spitzname"
+    }
     @PersonVersion.Person.NachnamePraefix
     @PersonVersion.Person.Nachname
     @PersonVersion.Person.SuffixTitel
+    @if (!string.IsNullOrEmpty(PersonVersion.Person.Geburtsname))
+    {
+        <small style="font-size: 50%">
+            geb. @PersonVersion.Person.GeburtsnamePraefix @PersonVersion.Person.Geburtsname
+        </small>
+    }
 </MudText>
 
 <MudCard Outlined="true" Class="ma-8">
