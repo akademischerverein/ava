@@ -7,7 +7,8 @@ using McMaster.Extensions.CommandLineUtils;
 
 namespace AV.AvA.BackupImporter.Commands
 {
-    [Command(Name = "AV.AvA.BackupImporter", Description = "Imports JSON backups into StorageBackend's database.")]
+    [Command(Name = "AV.AvA.BackupImporter", Description = "Imports/exports JSON backups into/from StorageBackend's database.")]
+    [Subcommand(typeof(ImportCommand), typeof(ExportCommand), typeof(TruncateCommand))]
     [VersionOptionFromMember(MemberName = nameof(GetVersion))]
     internal class MainCommand : BaseCommand
     {

@@ -1,4 +1,5 @@
-﻿using AV.AvA.BackupImporter.Commands;
+﻿using System.Text.Json;
+using AV.AvA.BackupImporter.Commands;
 using AV.AvA.BackupImporter.Services;
 using AV.AvA.Data;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 
 namespace AV.AvA.BackupImporter;
 
@@ -37,6 +39,13 @@ internal class Startup
         services.AddLogging();
         services.AddSingleton<IClock>(SystemClock.Instance);
         ConfigureDatabases(services);
+
+        services.AddTransient(sp =>
+        {
+            var x = new JsonSerializerOptions();
+            x.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            return x;
+        });
 
         services.AddHostedService<MeasureRuntimeService>();
     }
