@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 
-namespace AV.AvA.BackupImporter.Commands
+namespace AV.AvA.BackupTool.Commands
 {
     [HelpOption("--help")]
     internal class BaseCommand

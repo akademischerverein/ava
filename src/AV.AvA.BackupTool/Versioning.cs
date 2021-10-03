@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AV.AvA.BackupImporter
+namespace AV.AvA.BackupTool
 {
     internal static class Versioning
     {

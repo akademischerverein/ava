@@ -7,7 +7,7 @@ using AV.AvA.Data;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.EntityFrameworkCore;
 
-namespace AV.AvA.BackupImporter.Commands
+namespace AV.AvA.BackupTool.Commands
 {
     internal class TruncateCommand : BaseCommand
     {

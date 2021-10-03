@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 
-namespace AV.AvA.BackupImporter.Services
+namespace AV.AvA.BackupTool.Services
 {
     // see https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-5.0#ihostapplicationlifetime
     internal class MeasureRuntimeService : IHostedService

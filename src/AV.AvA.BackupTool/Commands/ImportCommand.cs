@@ -9,7 +9,7 @@ using AV.AvA.Data;
 using AV.AvA.Model;
 using McMaster.Extensions.CommandLineUtils;
 
-namespace AV.AvA.BackupImporter.Commands
+namespace AV.AvA.BackupTool.Commands
 {
     internal class ImportCommand : BaseCommand
     {

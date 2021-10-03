@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
-using AV.AvA.BackupImporter.Commands;
-using AV.AvA.BackupImporter.Services;
+using AV.AvA.BackupTool.Commands;
+using AV.AvA.BackupTool.Services;
 using AV.AvA.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 
-namespace AV.AvA.BackupImporter;
+namespace AV.AvA.BackupTool;
 
 public class Program
 {
