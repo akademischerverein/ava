@@ -15,7 +15,14 @@ namespace AV.AvA.BlazorWasmClient.Services
             _mapper = mapper;
         }
 
-        public async Task<PersonVersion> GetCurrentAsync(int avId)
+        public async Task<IReadOnlyCollection<PersonVersion>> GetCurrentAsync()
+        {
+            var res = _personVersionClient.GetAllCurrent(new GetAllCurrentRequest());
+            var sel = res.ResponseStream.ReadAllAsync().Select(x => _mapper.Map<Model.PersonVersion>(x));
+            return await sel.ToListAsync();
+        }
+
+        public async Task<PersonVersion> GetCurrentByAvIdAsync(int avId)
         {
             var res = _personVersionClient.GetAllByAvId(new GetAllByAvIdRequest() { AvId = avId });
             var rply = await res.ResponseStream.ReadAllAsync().LastAsync();

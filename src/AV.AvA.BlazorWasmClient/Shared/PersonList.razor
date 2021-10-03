@@ -1,6 +1,6 @@
 ﻿@using AV.AvA.Model
 <MudList Clickable="true">
-	@foreach(var pv in PersonVersions)
+	@foreach(var pv in PersonVersions ?? Enumerable.Empty<PersonVersion>())
 	{
 		var href = $"/Details/{pv.AvId}";
 		var p = pv.Person;
@@ -15,5 +15,5 @@
 
 @code {
 	[Parameter]
-	public IReadOnlyList<PersonVersion> PersonVersions { get; set; }
+	public IReadOnlyCollection<PersonVersion>? PersonVersions { get; set; }
 }

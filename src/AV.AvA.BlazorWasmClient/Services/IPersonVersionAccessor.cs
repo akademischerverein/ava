@@ -4,6 +4,7 @@ namespace AV.AvA.BlazorWasmClient.Services
 {
     internal interface IPersonVersionAccessor
     {
-        Task<PersonVersion> GetCurrentAsync(int avId);
+        Task<PersonVersion> GetCurrentByAvIdAsync(int avId);
+        Task<IReadOnlyCollection<PersonVersion>> GetCurrentAsync();
     }
 }

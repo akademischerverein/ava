@@ -1,26 +1,17 @@
 ﻿@page "/"
+@using AV.AvA.BlazorWasmClient.Services
 @using AV.AvA.Model
 @layout AuthedLayout
+@inject IPersonVersionAccessor pva
 
-<PersonList PersonVersions="x" />
+<PersonList PersonVersions="_persons" />
 
 @code {
-	List<PersonVersion> x = new();
+	IReadOnlyCollection<PersonVersion> _persons = default!;
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		base.OnInitialized();
-		var pv = new PersonVersion()
-		{
-			Person = new Person()
-			{
-				Vorname = "Georg",
-				Zweitnamen = "Zweitname",
-				Spitznamen = new List<string>() { "Spitzname" },
-				NachnamePraefix = "von",
-				Nachname = "Jung",
-			}
-		};
-		x.Add(pv);
+		_persons = await pva.GetCurrentAsync();
+		StateHasChanged();
 	}
 }

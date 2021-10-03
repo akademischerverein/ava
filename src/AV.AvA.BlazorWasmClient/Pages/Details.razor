@@ -24,7 +24,7 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-        _pv = await pva.GetCurrentAsync(AvId);
+        _pv = await pva.GetCurrentByAvIdAsync(AvId);
     }
 
     public PersonVersion pv = new PersonVersion()
