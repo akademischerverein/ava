@@ -59,12 +59,7 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddTransient(sp =>
-{
-    var opt = new JsonSerializerOptions();
-    opt.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-    return opt;
-});
+builder.Services.AddTransient(sp => AV.AvA.Common.Json.CreateSTJOptions());
 
 var app = builder.Build();
 
