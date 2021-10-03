@@ -1,16 +1,34 @@
 ﻿@using AV.AvA.Model
 <MudList Clickable="true">
-	@foreach(var pv in PersonVersions ?? Enumerable.Empty<PersonVersion>())
+	@if (PersonVersions == null)
 	{
-		var href = $"/Details/{pv.AvId}";
-		var p = pv.Person;
-		<MudListItem Href="@href"Icon="@Icons.Material.Filled.AccountCircle">
-			@p.Vorname
-			@p.Zweitnamen
-			@p.NachnamePraefix
-			@p.Nachname
+		<MudListItem Icon="@Icons.Material.Filled.AccountCircle" Disabled="true">
+			<MudSkeleton />
+		</MudListItem>
+		<MudListItem Icon="@Icons.Material.Filled.AccountCircle" Disabled="true">
+			<MudSkeleton />
+		</MudListItem>
+		<MudListItem Icon="@Icons.Material.Filled.AccountCircle" Disabled="true">
+			<MudSkeleton />
 		</MudListItem>
 	}
+	else
+	{
+		@foreach (var pv in PersonVersions ?? Enumerable.Empty<PersonVersion>())
+		{
+			var detailHref = $"/Details/{pv.AvId}";
+			var editHref = $"/Edit/{pv.AvId}";
+			var p = pv.Person;
+			<MudListItem Href="@detailHref" Icon="@Icons.Material.Filled.AccountCircle">
+				@p.Vorname
+				@p.Zweitnamen
+				@p.NachnamePraefix
+				@p.Nachname
+				<MudIconButton Link="@editHref" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Edge="Edge.End" Class="mx-3" />
+			</MudListItem>
+		}
+	}
+
 </MudList>
 
 @code {
