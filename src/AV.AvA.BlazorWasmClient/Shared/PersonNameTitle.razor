@@ -1,0 +1,27 @@
+﻿@using AV.AvA.Model
+
+<MudText Typo="Typo.h2" Class="ma-8">
+    <small style="font-size: 50%">@Person.PraefixTitel</small>
+    <br />
+    @Person.Vorname
+    @Person.Zweitnamen
+    @foreach (var spitzname in Person.Spitznamen)
+    {
+        @: "@spitzname"
+    }
+
+    @Person.NachnamePraefix
+    @Person.Nachname
+    @Person.SuffixTitel
+    @if (!string.IsNullOrEmpty(Person.Geburtsname))
+    {
+        <small style="font-size: 50%">
+            geb. @Person.GeburtsnamePraefix @Person.Geburtsname
+        </small>
+    }
+</MudText>
+
+@code {
+    [Parameter]
+    public Person Person { get; set; }
+}

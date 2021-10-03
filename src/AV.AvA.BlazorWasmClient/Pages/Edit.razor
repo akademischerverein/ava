@@ -1,4 +1,4 @@
-﻿@page "/Details/{AvId:int}"
+﻿@page "/Edit/{AvId:int}"
 @using AV.AvA.BlazorWasmClient.Services
 @using AV.AvA.Model
 @layout AuthedLayout
@@ -6,7 +6,7 @@
 
 @if (_pv != null)
 {
-    <PersonDetail PersonVersion="_pv"/>
+    <PersonEdit Person="@_pv.Person"/>
 }
 else
 {

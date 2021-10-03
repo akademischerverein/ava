@@ -3,27 +3,10 @@
 @using System.Text.Json
 @using System.Text.Encodings.Web
 @using System.Text.Unicode
+@using System.Diagnostics
 @inject JsonSerializerOptions _jsonOpts
 
-<MudText Typo="Typo.h2" Class="ma-8">
-    <small style="font-size: 50%">@PersonVersion.Person.PraefixTitel</small>
-    <br />
-    @PersonVersion.Person.Vorname
-    @PersonVersion.Person.Zweitnamen
-    @foreach (var spitzname in PersonVersion.Person.Spitznamen)
-    {
-        @: "@spitzname"
-    }
-    @PersonVersion.Person.NachnamePraefix
-    @PersonVersion.Person.Nachname
-    @PersonVersion.Person.SuffixTitel
-    @if (!string.IsNullOrEmpty(PersonVersion.Person.Geburtsname))
-    {
-        <small style="font-size: 50%">
-            geb. @PersonVersion.Person.GeburtsnamePraefix @PersonVersion.Person.Geburtsname
-        </small>
-    }
-</MudText>
+<PersonNameTitle Person="@PersonVersion.Person" />
 
 <MudCard Outlined="true" Class="ma-8">
     <MudCardContent>
