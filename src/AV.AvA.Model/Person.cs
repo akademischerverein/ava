@@ -9,49 +9,49 @@ public class Person
 {
     public Geschlecht Geschlecht { get; set; }
 
-    public string PraefixTitel { get; set; } = default!;
+    public string? PraefixTitel { get; set; }
 
     public string Vorname { get; set; } = default!;
 
-    public string Zweitnamen { get; set; } = default!;
+    public string? Zweitnamen { get; set; }
 
-    public List<string> Spitznamen { get; set; } = default!;
+    public List<string> Spitznamen { get; set; } = new(0);
 
-    public string NachnamePraefix { get; set; } = default!;
+    public string? NachnamePraefix { get; set; }
 
     public string Nachname { get; set; } = default!;
 
-    public string SuffixTitel { get; set; } = default!;
+    public string? SuffixTitel { get; set; }
 
-    public string Geburtsname { get; set; } = default!;
+    public string? Geburtsname { get; set; }
 
-    public string GeburtsnamePraefix { get; set; } = default!;
+    public string? GeburtsnamePraefix { get; set; }
 
-    public string Geburtsort { get; set; } = default!;
+    public string? Geburtsort { get; set; }
 
     public LocalDate? Geburtsdatum { get; set; }
 
-    public string Kolonie { get; set; } = default!;
+    public string? Kolonie { get; set; }
 
     public int? Debitorennummer { get; set; }
 
-    public string Webseite { get; set; } = default!;
+    public string? Webseite { get; set; }
 
-    public List<Adresse> Adressen { get; set; } = default!;
+    public List<Adresse> Adressen { get; set; } = new(0);
 
-    public List<Mobilnummer> Mobilnummern { get; set; } = default!;
+    public List<Mobilnummer> Mobilnummern { get; set; } = new(0);
 
-    public List<Email> Emails { get; set; } = default!;
+    public List<Email> Emails { get; set; } = new(0);
 
-    public List<Arbeitgeber> Arbeitgeber { get; set; } = default!;
+    public List<Arbeitgeber> Arbeitgeber { get; set; } = new(0);
 
-    public List<Ausbildung> Ausbildungen { get; set; } = default!;
+    public List<Ausbildung> Ausbildungen { get; set; } = new(0);
 
-    public List<Messenger> Messenger { get; set; } = default!;
+    public List<Messenger> Messenger { get; set; } = new(0);
 
-    public List<StatusEreignis> Status { get; set; } = default!;
+    public List<StatusEreignis> Status { get; set; } = new(0);
 
-    public List<Beziehung> Beziehungen { get; set; } = default!;
+    public List<Beziehung> Beziehungen { get; set; } = new(0);
 
     public bool AvASchreibzugriff { get; set; }
 }
