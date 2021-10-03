@@ -1,0 +1,66 @@
+﻿@using AV.AvA.Model
+@using System.Globalization
+
+@{
+    var addrTitle = Adresse.Strasse + " in " + Adresse.Ort + ", " + Adresse.Land;
+}
+@if (Adresse.Typ == AdressTyp.Studien)
+{
+    addrTitle += " (Studienadresse)";
+}
+<!--
+    @Adresse.Strasse in @Adresse.Ort, @Adresse.Land
+-->
+<MudText>
+    @{
+        (Color Color, string Caption)? x = Adresse.Typ switch
+        {
+            AdressTyp.Primaer => (Color.Primary, "primär"),
+            AdressTyp.Studien => (Color.Info, "Studium"),
+            AdressTyp.Temporaer => (Color.Info, "temporär"),
+            AdressTyp.Eltern => (Color.Info, "Eltern"),
+            AdressTyp.Geschaeftlich => (Color.Info, "geschäftlich"),
+            AdressTyp.Andere => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(Adresse.Typ), $"Not expected AdressTyp value: {Adresse.Typ}"),
+        };
+    }
+    @if (x.HasValue || Adresse.GueltigVon.HasValue || Adresse.GueltigBis.HasValue)
+    {
+        <MudText Typo="Typo.caption">
+        @if (x.HasValue)
+        {
+            @: &middot;
+            @x.Value.Caption
+        }
+        @if (Adresse.GueltigVon.HasValue || Adresse.GueltigBis.HasValue)
+        {
+            @: &middot;
+            var deDe = new CultureInfo("de-DE");
+            @: Gültig
+            @if (Adresse.GueltigVon.HasValue)
+            {
+                @: von
+                @Adresse.GueltigVon.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+            }
+            @if (Adresse.GueltigBis.HasValue)
+            {
+                @: bis            
+                @Adresse.GueltigBis.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+            }
+        }
+        </MudText>
+        <br />
+    }
+    @Adresse.Strasse in 
+    @Adresse.PLZ @Adresse.Ort,
+    @Adresse.Land
+    @if (!string.IsNullOrEmpty(Adresse.Telefon))
+    {
+        <br />@:Tel:
+        <a href="tel:@Adresse.Telefon">@Adresse.Telefon</a>
+    }
+</MudText>
+@code {
+    [Parameter]
+    public Adresse Adresse { get; set; }
+}

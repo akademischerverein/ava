@@ -1,0 +1,49 @@
+﻿@using AV.AvA.Model
+
+@if (Adressen.Count > 0)
+{
+    <MudListItem Icon="@Icons.Material.Filled.LocationOn">
+        @foreach (var addr in Adressen)
+        {
+            <MudText>
+                @{
+                    (Color Color, string Caption)? x = addr.Typ switch
+                    {
+                        AdressTyp.Primaer => (Color.Primary, "primär"),
+                        AdressTyp.Studien => (Color.Info, "Studium"),
+                        AdressTyp.Temporaer => (Color.Info, "temporär"),
+                        AdressTyp.Eltern => (Color.Info, "Eltern"),
+                        AdressTyp.Geschaeftlich => (Color.Info, "geschäftlich"),
+                        AdressTyp.Andere => null,
+                        _ => throw new ArgumentOutOfRangeException(nameof(addr.Typ), $"Not expected AdressTyp value: {addr.Typ}"),
+                    };
+                }
+                @if (x.HasValue || addr.GueltigVon.HasValue || addr.GueltigBis.HasValue)
+                {
+                    <MudText Typo="Typo.caption">
+                        @if (x.HasValue)
+                        {
+                            @x.Value.Caption
+                        }
+                        <GueltigVonBis GueltigVon="@addr.GueltigVon" GueltigBis="@addr.GueltigBis" />
+                    </MudText>
+                    <br />
+                }
+                @addr.Strasse in 
+                @addr.PLZ @addr.Ort,
+                @addr.Land
+                @if (!string.IsNullOrEmpty(addr.Telefon))
+                {
+                    <br />@:Tel:
+                    <a href="tel:@addr.Telefon">@addr.Telefon</a>
+                }
+            </MudText>
+        }
+    </MudListItem>
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<Adresse> Adressen { get; set;}
+
+}

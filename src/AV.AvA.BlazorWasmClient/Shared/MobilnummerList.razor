@@ -1,0 +1,58 @@
+﻿@using AV.AvA.Model
+@using System.Globalization
+
+
+@if (Mobilnummern.Count > 0)
+{
+    <MudListItem Icon="@Icons.Material.Filled.PhoneAndroid">
+        @foreach (var mobilnummer in Mobilnummern)
+        {
+            <MudText Typo="Typo.body1">
+                <a href="tel:@mobilnummer.Nummer">@mobilnummer.Nummer</a>
+                @{
+                    string? Caption = mobilnummer.Typ switch
+                    {
+                        AdressTyp.Primaer => "primär",
+                        AdressTyp.Studien => "Studium",
+                        AdressTyp.Temporaer => "temporär",
+                        AdressTyp.Eltern => "Eltern",
+                        AdressTyp.Geschaeftlich => "geschäftlich",
+                        AdressTyp.Andere => null,
+                        _ => throw new ArgumentOutOfRangeException(nameof(mobilnummer.Typ), $"Not expected AdressTyp value: {mobilnummer.Typ}"),
+                    };
+                }
+                @if (Caption != null)
+                {
+                    <MudText Typo="Typo.caption">
+                        &middot;
+                        @Caption
+                    </MudText>
+                }
+                @if (mobilnummer.GueltigVon.HasValue || mobilnummer.GueltigBis.HasValue)
+                {
+                    var deDe = new CultureInfo("de-DE");
+                    <MudText Typo="Typo.caption">
+                        &middot;
+                        Gültig
+                        @if (mobilnummer.GueltigVon.HasValue)
+                        {
+                            @: von
+                            @mobilnummer.GueltigVon.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+                        }
+                        @if (mobilnummer.GueltigBis.HasValue)
+                        {
+                            @: bis            
+                            @mobilnummer.GueltigBis.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+                        }
+                    </MudText>
+                }
+            </MudText>
+        }
+    </MudListItem>
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<Mobilnummer> Mobilnummern { get; set; }
+
+}

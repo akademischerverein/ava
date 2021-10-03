@@ -1,0 +1,158 @@
+﻿@using AV.AvA.Model
+@using System.Globalization
+
+<MudText Typo="Typo.h2" Class="ma-8">
+    <small style="font-size: 50%">@PersonVersion.Person.PraefixTitel</small>
+    <br />
+    @PersonVersion.Person.Vorname
+    @PersonVersion.Person.Zweitnamen
+    @PersonVersion.Person.NachnamePraefix
+    @PersonVersion.Person.Nachname
+    @PersonVersion.Person.SuffixTitel
+</MudText>
+
+<MudCard Outlined="true" Class="ma-8">
+    <MudCardContent>
+        <MudList>
+            <MudListSubheader>
+                <MudText Typo="Typo.h6">Kontaktdaten</MudText>
+            </MudListSubheader>
+            <EmailList Emails="@PersonVersion.Person.Emails" />
+            <MobilnummerList Mobilnummern="@PersonVersion.Person.Mobilnummern" />
+            <AdressList Adressen="@PersonVersion.Person.Adressen" />
+            @if (PersonVersion.Person.Geburtsdatum.HasValue || !string.IsNullOrEmpty(PersonVersion.Person.Geburtsort))
+            {
+                var deDe = new CultureInfo("de-DE");
+                <MudListItem Icon="@Icons.Material.Filled.Cake">
+                    Geboren
+                    @if (PersonVersion.Person.Geburtsdatum.HasValue)
+                    {
+                        @: am
+                        @PersonVersion.Person.Geburtsdatum.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+                    }
+                    @if (!string.IsNullOrEmpty(PersonVersion.Person.Geburtsort))
+                    {
+                        @: in
+                        @PersonVersion.Person.Geburtsort
+                    }
+                </MudListItem>
+            }
+            <MessengerList Messengers="@PersonVersion.Person.Messenger" />
+            @if (!string.IsNullOrEmpty(PersonVersion.Person.Webseite))
+            {
+                <MudListItem Icon="@Icons.Material.Filled.Web">
+                    <a href="@PersonVersion.Person.Webseite" target="_blank" rel="noopener noreferrer">@PersonVersion.Person.Webseite</a>
+                </MudListItem>
+            }
+        </MudList>
+    </MudCardContent>
+</MudCard>
+
+<MudCard Outlined="true" Class="ma-8">
+    <MudCardContent>
+        <MudList>
+            <MudListSubheader>
+                <MudText Typo="Typo.h6">Akademischer Verein</MudText>
+            </MudListSubheader>
+            @if (!string.IsNullOrEmpty(PersonVersion.Person.Kolonie))
+            {
+                <MudListItem Icon="@Icons.Material.Filled.LocationOn">
+                    Kolonie @PersonVersion.Person.Kolonie
+                </MudListItem>
+            }
+            @if (PersonVersion.Person.Debitorennummer.HasValue)
+            {
+                <MudListItem Icon="@Icons.Material.Filled.Payment">
+                    Debitorennummer @PersonVersion.Person.Debitorennummer
+                </MudListItem>
+            }
+
+        </MudList>
+    </MudCardContent>
+</MudCard>
+
+@if (PersonVersion.Person.Beziehungen.Count > 0)
+{
+    <MudCard Outlined="true" Class="ma-8">
+        <MudCardContent>
+            <MudList>
+                <MudListSubheader>
+                    <MudText Typo="Typo.h6">Beziehungen</MudText>
+                </MudListSubheader>
+                @foreach (var beziehung in PersonVersion.Person.Beziehungen)
+                {
+                    <MudListItem>
+                        @beziehung.Typ von @beziehung.Vorname @beziehung.Nachname
+                        <MudText Typo="Typo.caption">
+                            <GueltigVonBis GueltigVon="@beziehung.GueltigVon" GueltigBis="@beziehung.GueltigBis" />
+                        </MudText>
+                    </MudListItem>
+                }
+            </MudList>
+        </MudCardContent>
+    </MudCard>   
+}
+
+@if (PersonVersion.Person.Ausbildungen.Count > 0)
+{
+    <MudCard Outlined="true" Class="ma-8">
+        <MudCardContent>
+            <MudList>
+                <MudListSubheader>
+                    <MudText Typo="Typo.h6">Ausbildung</MudText>
+                </MudListSubheader>
+                @foreach (var ausbildung in PersonVersion.Person.Ausbildungen)
+                {
+                    <MudListItem>
+                        @ausbildung.Abschluss @ausbildung.Name
+                        <GueltigVonBis GueltigVon="@ausbildung.GueltigVon" GueltigBis="@ausbildung.GueltigBis" Caption="" AddSeperator="false" />
+                        @if (ausbildung.GueltigBis.HasValue && !ausbildung.AbschlussErreicht)
+                        {
+                            @: (abgebrochen)
+                        }
+                    </MudListItem>
+                }
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+}
+
+@if (PersonVersion.Person.Arbeitgeber.Count > 0)
+{
+    <MudCard Outlined="true" Class="ma-8">
+        <MudCardContent>
+            <MudList>
+                <MudListSubheader>
+                    <MudText Typo="Typo.h6">Arbeitgeber</MudText>
+                </MudListSubheader>
+                @foreach (var arbeitgeber in PersonVersion.Person.Arbeitgeber)
+                {
+                    <MudListItem>
+                        <MudText Typo="Typo.caption">
+                            <GueltigVonBis GueltigVon="@arbeitgeber.GueltigVon" GueltigBis="@arbeitgeber.GueltigBis" AddLinebreak="true"/>
+                        </MudText>
+                        @arbeitgeber.Position bei @arbeitgeber.Name
+                        @if (!string.IsNullOrEmpty(@arbeitgeber.Abteilung))
+                        {
+                            @: (@arbeitgeber.Abteilung)
+                        }
+                        <br />
+                        @arbeitgeber.Adresse.Strasse in 
+                        @arbeitgeber.Adresse.PLZ @arbeitgeber.Adresse.Ort,
+                        @arbeitgeber.Adresse.Land
+                        @if (!string.IsNullOrEmpty(arbeitgeber.Adresse.Telefon))
+                        {
+                            <br />@:Tel:
+                            <a href="tel:@arbeitgeber.Adresse.Telefon">@arbeitgeber.Adresse.Telefon</a>
+                        }
+                    </MudListItem>
+                }
+            </MudList>
+        </MudCardContent>
+    </MudCard>
+}
+
+@code {
+    [Parameter]
+    public PersonVersion PersonVersion { get; set; }
+}

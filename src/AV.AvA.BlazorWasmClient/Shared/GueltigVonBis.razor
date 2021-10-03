@@ -1,0 +1,54 @@
+﻿@using NodaTime
+@using System.Globalization
+
+@{
+    var deDe = new CultureInfo("de-DE");
+}
+
+@if (GueltigVon.HasValue || GueltigBis.HasValue)
+{
+    @if (AddSeperator)
+    {
+        @: &middot;
+    }
+    @Caption
+
+    @if (GueltigVon.HasValue && GueltigBis.HasValue)
+    {
+        @: von
+        @GueltigVon.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+        @: bis
+        @GueltigBis.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+    }
+    else if (GueltigVon.HasValue)
+    {
+        @: ab
+        @GueltigVon.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+    }
+    else
+    {
+        @: bis
+        @GueltigBis.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+    }
+    @if (AddLinebreak)
+    {
+        <br />
+    }
+}
+
+@code {
+    [Parameter]
+    public bool AddSeperator { get; set; } = true;
+
+    [Parameter]
+    public bool AddLinebreak { get; set; } = false;
+
+    [Parameter]
+    public string Caption { get; set; } = "Gültig";
+
+    [Parameter]
+    public ZonedDateTime? GueltigVon { get; set; }
+
+    [Parameter]
+    public ZonedDateTime? GueltigBis { get; set; }
+}

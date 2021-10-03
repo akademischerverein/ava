@@ -1,9 +1,12 @@
+using System.Text.Json;
 using AV.AvA.Data;
 using AV.AvA.StorageBackend;
 using AV.AvA.StorageBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +57,13 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuer = false,
         ValidateAudience = false,
     };
+});
+
+builder.Services.AddTransient(sp =>
+{
+    var opt = new JsonSerializerOptions();
+    opt.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+    return opt;
 });
 
 var app = builder.Build();

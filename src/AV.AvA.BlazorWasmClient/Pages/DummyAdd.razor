@@ -1,41 +1,23 @@
-﻿@page "/Details/{AvId:int}"
+﻿@page "/DummyAdd"
+
 @using AV.AvA.BlazorWasmClient.Services
 @using AV.AvA.Model
 @using NodaTime
+@using NodaTime.Serialization.SystemTextJson
 @using NodaTime.Text
 @using NodaTime.TimeZones
+@using System.Text.Json
 @layout AuthedLayout
-@inject IPersonVersionAccessor pva
+@inject PersonVersionRepository.PersonVersionRepositoryClient cl;
+@inject JsonSerializerOptions opt;
 
-@if (_pv != null)
-{
-    <PersonDetail PersonVersion="_pv"/>
-}
-else
-{
-    @:Laden...
-}
+<h3>DummyAdd</h3>
+<button @onclick="AddAsync">KABOOOOOM</button>
 
 @code {
-    [Parameter]
-	public int AvId { get; set; }
-
-	private PersonVersion? _pv;
-
-	protected override async Task OnParametersSetAsync()
-	{
-        _pv = await pva.GetCurrentAsync(AvId);
-    }
-
-    public PersonVersion pv = new PersonVersion()
+    async Task AddAsync()
     {
-        AvId = 12345,
-        ComitterAvId = 0,
-        CommitMessage = "WHUP DUP DUBIIIDOOO",
-        CommittedAt = InstantPattern.General.Parse("2021-10-02T11:22:33Z").GetValueOrThrow(),
-        PersonVersionId = 5,
-        Software = "AVA Migrator -5.3.42",
-        Person = new Person
+        var person = new Person
         {
             Debitorennummer = 99099,
             Geburtsdatum = LocalDatePattern.Iso.Parse("2003-02-01").GetValueOrThrow(),
@@ -50,11 +32,47 @@ else
             {
                 "Bremse",
             },
+            Beziehungen = new List<Beziehung>
+            {
+                new Beziehung
+                {
+                    Typ = BeziehungsTyp.Enkel,
+                    Vorname = "Ernst",
+                    Nachname = "Freude",
+                    GueltigVon = new ZonedDateTime(InstantPattern.General.Parse("2005-06-07T00:00:00Z").GetValueOrThrow(), DateTimeZoneProviders.Tzdb["Europe/Berlin"]),
+                }
+            },
+            Ausbildungen = new List<Ausbildung>
+            {
+                new Ausbildung
+                {
+                    GueltigVon = new ZonedDateTime(InstantPattern.General.Parse("2009-11-12T00:00:00Z").GetValueOrThrow(), DateTimeZoneProviders.Tzdb["Europe/Berlin"]),
+                    GueltigBis = new ZonedDateTime(InstantPattern.General.Parse("2010-11-12T00:00:00Z").GetValueOrThrow(), DateTimeZoneProviders.Tzdb["Europe/Berlin"]),
+                    Name = "Elektrotechnik",
+                    Abschluss = "B.Sc."
+                },
+                new Ausbildung
+                {
+                    GueltigVon = new ZonedDateTime(InstantPattern.General.Parse("2010-11-12T00:00:00Z").GetValueOrThrow(), DateTimeZoneProviders.Tzdb["Europe/Berlin"]),
+                    GueltigBis = new ZonedDateTime(InstantPattern.General.Parse("2013-11-12T00:00:00Z").GetValueOrThrow(), DateTimeZoneProviders.Tzdb["Europe/Berlin"]),
+                    Name = "Maschinenbau",
+                    Abschluss = "B.Sc.",
+                    AbschlussErreicht = true,
+                },
+                new Ausbildung
+                {
+                    GueltigVon = new ZonedDateTime(InstantPattern.General.Parse("2013-11-12T00:00:00Z").GetValueOrThrow(), DateTimeZoneProviders.Tzdb["Europe/Berlin"]),
+                    GueltigBis = new ZonedDateTime(InstantPattern.General.Parse("2017-11-12T00:00:00Z").GetValueOrThrow(), DateTimeZoneProviders.Tzdb["Europe/Berlin"]),
+                    Name = "Maschinenbau",
+                    Abschluss = "M.Sc.",
+                    AbschlussErreicht = true,
+                },
+            },
             Mobilnummern = new List<Mobilnummer>
             {
                 new Mobilnummer
                 {
-                    Nummer = "+19 1252 222222",
+                    Nummer = "+49 1252 222222",
                     Typ = AdressTyp.Primaer
                 }
             },
@@ -73,6 +91,7 @@ else
                 {
                     Abteilung = "Spaßabteilung",
                     Position = "Bällebadbeauftragter",
+                    Name = "Gesellschaft mit beschränkter Handlung",
                     Adresse = new Adresse
                     {
                         Strasse = "Unlustige Straße 1",
@@ -125,6 +144,12 @@ else
                     }
                 }
             },
-        }
-    };
+        };
+        await cl.CreateNewPersonAsync(new()
+        {
+            CommitMessage = "WHUP DUP DUBIIIDOOO",
+            Software = "AVA Migrator -5.3.42",
+            Person = JsonSerializer.Serialize(person, opt),
+        });
+    }
 }

@@ -1,0 +1,35 @@
+﻿@using AV.AvA.Model
+
+@foreach (var messenger in Messengers)
+{
+    (string Icon, string Caption, string? Href) x = messenger.Typ switch
+    {
+        MessengerTyp.Instagram => (Icons.Custom.Brands.Instagram, "Instagram", "https://instagram.com/" + messenger.Name),
+        MessengerTyp.Facebook => (Icons.Custom.Brands.Facebook, "Facebook", "https://facebook.com/" + messenger.Name),
+        MessengerTyp.Skype => (Icons.Custom.Brands.Awesome, "Skype", null),
+        MessengerTyp.Xing => (Icons.Material.Filled.Link, "Xing", null),
+        MessengerTyp.Telegram => (Icons.Custom.Brands.Telegram, "Telegram", null),
+        _ => throw new ArgumentOutOfRangeException(nameof(messenger.Typ), $"Not expected MessengerTyp value: {messenger.Typ}"),
+    };
+    <MudListItem Icon="@x.Icon">
+        @if (string.IsNullOrEmpty(x.Href))
+        {
+            @messenger.Name
+        }
+        else
+        {
+            <a href="@x.Href">messenger.Name</a>
+        }
+        <MudText Typo="Typo.caption">
+            <GueltigVonBis GueltigVon="@messenger.GueltigVon" GueltigBis="@messenger.GueltigBis" />
+            &middot;
+            @x.Caption
+        </MudText>
+    </MudListItem>
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<Messenger> Messengers { get; set;}
+
+}

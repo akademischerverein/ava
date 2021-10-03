@@ -1,0 +1,37 @@
+﻿@using AV.AvA.Model
+
+@if (Emails.Count > 0)
+{
+    <MudListItem Icon="@Icons.Material.Filled.Email">
+        @foreach (var email in Emails)
+        {
+            <MudText Typo="Typo.body1">
+                <a href="mailto:@email.Adresse">@email.Adresse</a>
+                @{
+                    string? Caption = email.Typ switch
+                    {
+                        AdressTyp.Primaer => "primär",
+                        AdressTyp.Studien => "Studium",
+                        AdressTyp.Temporaer => "temporär",
+                        AdressTyp.Eltern => "Eltern",
+                        AdressTyp.Geschaeftlich => "geschäftlich",
+                        AdressTyp.Andere => null,
+                        _ => throw new ArgumentOutOfRangeException(nameof(email.Typ), $"Not expected AdressTyp value: {email.Typ}"),
+                    };
+                }
+                @if (Caption != null)
+                {
+                    <MudText Typo="Typo.caption">
+                        &middot;
+                        @Caption
+                    </MudText>
+                }
+            </MudText>
+        }
+    </MudListItem>
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<Email> Emails { get; set; }
+}
