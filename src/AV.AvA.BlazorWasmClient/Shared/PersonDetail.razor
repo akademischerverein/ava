@@ -1,5 +1,9 @@
 ﻿@using AV.AvA.Model
 @using System.Globalization
+@using System.Text.Json
+@using System.Text.Encodings.Web
+@using System.Text.Unicode
+@inject JsonSerializerOptions _jsonOpts
 
 <MudText Typo="Typo.h2" Class="ma-8">
     <small style="font-size: 50%">@PersonVersion.Person.PraefixTitel</small>
@@ -152,7 +156,22 @@
     </MudCard>
 }
 
+<MudCard Outlined="true" Class="ma-8">
+    <MudCardContent>
+        <MudText Typo="Typo.h6">Rohdaten</MudText>
+        <pre>
+            @(JsonSerializer.Serialize(PersonVersion, JsonPrettyOpts))
+        </pre>
+    </MudCardContent>
+</MudCard>
+
 @code {
     [Parameter]
     public PersonVersion PersonVersion { get; set; }
+
+    private JsonSerializerOptions JsonPrettyOpts => new(_jsonOpts)
+    {
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
 }
