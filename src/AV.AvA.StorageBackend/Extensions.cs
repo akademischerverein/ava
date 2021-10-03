@@ -7,17 +7,10 @@ namespace AV.AvA.StorageBackend
 {
     internal static class Extensions
     {
-        private static readonly JsonSerializerOptions _jsonOpt = GetNodaTimeSTJSettings();
+        private static readonly JsonSerializerOptions _jsonOpt = Common.Json.CreateSTJOptions();
 
         public static Person DeserializePerson(this StorageModel.PersonVersion pv) =>
             JsonSerializer.Deserialize<Person>(pv.Person, _jsonOpt)
             ?? throw new ArgumentException("Given PersonVersion does not contain a valid Person JSON representation", nameof(pv));
-
-        private static JsonSerializerOptions GetNodaTimeSTJSettings()
-        {
-            var x = new JsonSerializerOptions();
-            x.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-            return x;
-        }
     }
 }

@@ -15,12 +15,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddTransient<IPersonVersionAccessor, GrpcPersonVersionAccessor>();
-builder.Services.AddTransient(sp =>
-{
-    var x = new JsonSerializerOptions();
-    x.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-    return x;
-});
+builder.Services.AddTransient(sp => AV.AvA.Common.Json.CreateSTJOptions());
 
 builder.Services.AddMudServices();
 builder.Services.AddAutoMapper(typeof(Program));

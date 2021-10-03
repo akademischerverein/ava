@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AV.AvA.StorageModel", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AV.AvA.BackupTool", "src\AV.AvA.BackupTool\AV.AvA.BackupTool.csproj", "{F39474DE-0FDA-4E42-AFA3-EA4E9D28CE88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AV.AvA.Common", "AV.AvA.Common\AV.AvA.Common.csproj", "{5EC722D3-257B-4CBB-8765-D542C196476B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{F39474DE-0FDA-4E42-AFA3-EA4E9D28CE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F39474DE-0FDA-4E42-AFA3-EA4E9D28CE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F39474DE-0FDA-4E42-AFA3-EA4E9D28CE88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EC722D3-257B-4CBB-8765-D542C196476B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EC722D3-257B-4CBB-8765-D542C196476B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EC722D3-257B-4CBB-8765-D542C196476B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EC722D3-257B-4CBB-8765-D542C196476B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

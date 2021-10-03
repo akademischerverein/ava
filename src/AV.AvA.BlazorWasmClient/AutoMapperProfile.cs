@@ -8,9 +8,7 @@ namespace AV.AvA.BlazorWasmClient
 {
     public class AutoMapperProfile : Profile
     {
-        // ToDo: get the serializer opts from DI
-
-        private static readonly JsonSerializerOptions _jsonOpt = GetNodaTimeSTJSettings();
+        private static readonly JsonSerializerOptions _jsonOpt = AV.AvA.Common.Json.CreateSTJOptions();
 
         public AutoMapperProfile()
         {
@@ -23,13 +21,6 @@ namespace AV.AvA.BlazorWasmClient
                     dest => dest.CommittedAt,
                     opt => opt.MapFrom((src, dest) =>
                         Instant.FromDateTimeOffset(src.CommittedAt.ToDateTimeOffset())));
-        }
-
-        private static JsonSerializerOptions GetNodaTimeSTJSettings()
-        {
-            var x = new JsonSerializerOptions();
-            x.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-            return x;
         }
     }
 }

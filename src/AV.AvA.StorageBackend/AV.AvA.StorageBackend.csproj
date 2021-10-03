@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AV.AvA.Common\AV.AvA.Common.csproj" />
     <ProjectReference Include="..\AV.AvA.Data\AV.AvA.Data.csproj" />
     <ProjectReference Include="..\AV.AvA.Model\AV.AvA.Model.csproj" />
     <ProjectReference Include="..\AV.AvA.StorageModel\AV.AvA.StorageModel.csproj" />

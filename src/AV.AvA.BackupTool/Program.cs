@@ -40,12 +40,7 @@ internal class Startup
         services.AddSingleton<IClock>(SystemClock.Instance);
         ConfigureDatabases(services);
 
-        services.AddTransient(sp =>
-        {
-            var x = new JsonSerializerOptions();
-            x.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-            return x;
-        });
+        services.AddTransient(sp => Common.Json.CreateSTJOptions());
 
         services.AddHostedService<MeasureRuntimeService>();
     }
