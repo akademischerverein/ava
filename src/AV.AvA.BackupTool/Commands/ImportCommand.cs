@@ -40,8 +40,9 @@ namespace AV.AvA.BackupTool.Commands
                     ComitterAvId = pv.ComitterAvId,
                     CommitMessage = pv.CommitMessage,
                     CommittedAt = pv.CommittedAt,
-                    Person = JsonSerializer.Serialize(pv.Person, _jsonOpts),
                     Software = pv.Software,
+                    Person = JsonSerializer.Serialize(pv.Person, _jsonOpts),
+                    PersonVersionId = pv.PersonVersionId,
                 });
             }
 
