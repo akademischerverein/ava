@@ -54,4 +54,8 @@ public class Person
     public List<Beziehung> Beziehungen { get; set; } = new(0);
 
     public bool AvASchreibzugriff { get; set; }
+
+    public List<string> VerursachendeZeilen { get; set; } = new List<string>();
+
+    public Dictionary<string, string> AltesAvaModel { get; set; } = new Dictionary<string, string>();
 }
