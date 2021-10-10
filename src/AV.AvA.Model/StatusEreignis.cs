@@ -5,7 +5,7 @@ namespace AV.AvA.Model;
 
 public class StatusEreignis
 {
-    public ZonedDateTime EingetretenAm { get; set; }
+    public ZonedDateTime? EingetretenAm { get; set; }
 
     public ZonedDateTime? BefristedBis { get; set; }
 
