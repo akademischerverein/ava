@@ -6,7 +6,7 @@ namespace AV.AvA.Model
 {
     public enum MobilnummerTyp
     {
-        Primaer,
+        Primaer = 1,
         Geschaeftlich,
         Temporaer,
         Andere,

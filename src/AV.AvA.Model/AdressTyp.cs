@@ -2,7 +2,7 @@ namespace AV.AvA.Model;
 
 public enum AdressTyp
 {
-    Primaer,
+    Primaer = 1,
     Geschaeftlich,
     Temporaer,
     Studien,

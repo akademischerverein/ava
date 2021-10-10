@@ -2,7 +2,7 @@ namespace AV.AvA.Model;
 
 public enum StatusTyp
 {
-    StudentischerGast,
+    StudentischerGast = 1,
     Verkehrsgast,
     Jungmitglied,
     AktivesVollmitglied,

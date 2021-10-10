@@ -6,7 +6,7 @@ namespace AV.AvA.Model
 {
     public enum EmailTyp
     {
-        Primaer,
+        Primaer = 1,
         Geschaeftlich,
         Andere,
     }

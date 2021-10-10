@@ -2,7 +2,7 @@ namespace AV.AvA.Model;
 
 public enum BeziehungsTyp
 {
-    Lebenspartner,
+    Lebenspartner = 1,
     Enkel,
     Kind,
     TanteOnkel,

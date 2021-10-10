@@ -2,7 +2,7 @@ namespace AV.AvA.Model;
 
 public enum MessengerTyp
 {
-    Facebook,
+    Facebook = 1,
     Instagram,
     LinkedIn,
     MSN,

@@ -6,7 +6,7 @@ namespace AV.AvA.Model
 {
     public enum Geschlecht
     {
-        Weiblich,
+        Weiblich = 1,
         Maennlich,
     }
 }

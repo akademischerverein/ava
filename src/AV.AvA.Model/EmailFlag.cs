@@ -6,7 +6,7 @@ namespace AV.AvA.Model
 {
     public enum EmailFlag
     {
-        Vereinsangelegenheiten,
+        Vereinsangelegenheiten = 1,
         Mitteilungsblatt,
         Einladung,
         VerteilerBundesleben,

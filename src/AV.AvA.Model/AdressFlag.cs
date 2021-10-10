@@ -2,7 +2,7 @@ namespace AV.AvA.Model;
 
 public enum AdressFlag
 {
-    Mitteilungsblatt,
+    Mitteilungsblatt = 1,
     Veranstaltungseinladung,
     Vereinsangelegenheit,
 }

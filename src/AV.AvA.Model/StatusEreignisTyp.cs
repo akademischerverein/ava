@@ -2,7 +2,7 @@ namespace AV.AvA.Model;
 
 public enum StatusEreignisTyp
 {
-    StudentischerGastEingezogen,
+    StudentischerGastEingezogen = 1,
     StudentischerGastAusgezogen,
     JungmitgliedEingesungen,
     VerkehrsgastAufgenommen,
@@ -21,4 +21,9 @@ public enum StatusEreignisTyp
     EintrittGAV,
     EhrenmitgliedschaftErhalten,
     Verwittwert,
+    Verstorben,
+    AusscheidenAktivitas,
+    AusscheidenAVeV,
+    AusscheidenHG,
+    AusscheidenGAV,
 }
