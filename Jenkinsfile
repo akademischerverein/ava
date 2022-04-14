@@ -18,7 +18,7 @@ pipeline {
     }
     stage('Clean') {
         steps {
-            sh 'dotnet clean AV.AvA.sln --configuation Debug'
+            sh 'dotnet clean AV.AvA.sln'
         }
     }
     stage('Build') {
