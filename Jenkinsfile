@@ -23,12 +23,12 @@ pipeline {
     }
     stage('Build') {
         steps {
-            sh 'dotnet build AV.AvA.sln'
+            sh 'dotnet build -c Release AV.AvA.sln'
         }
     }
     stage('Publish') {
         steps {
-            sh 'dotnet publish AV.AvA.sln'
+            sh 'dotnet publish -c Release AV.AvA.sln'
         }
     }
   }
