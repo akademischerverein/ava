@@ -5,6 +5,11 @@ pipeline {
     }
 
   }
+
+  environment {
+    DOTNET_CLI_HOME = "/tmp/DOTNET_CLI_HOME"
+  }
+
   stages {
     stage('Restore packages') {
         steps {
