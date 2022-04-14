@@ -23,12 +23,12 @@ pipeline {
     }
     stage('Build') {
         steps {
-            sh 'dotnet --configuation Debug --no-restore build AV.AvA.sln'
+            sh 'dotnet build --configuation Debug --no-restore AV.AvA.sln'
         }
     }
     stage('Publish') {
         steps {
-            sh 'dotnet --configuation Debug --no-restore publish AV.AvA.sln'
+            sh 'dotnet publish --configuation Debug --no-restore AV.AvA.sln'
         }
     }
   }
