@@ -35,7 +35,7 @@ pipeline {
 
   post {
     always {
-        archiveArtifacts artifacts: 'bin/*/Release/*'
+        archiveArtifacts artifacts: 'bin/'
     }
   }
 }
