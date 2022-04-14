@@ -6,24 +6,25 @@ pipeline {
 
   }
   stages {
-    stage('build debug') {
-      parallel {
-        stage('build debug') {
-          steps {
-            sh 'dotnet publish AV.AvA.sln -c Debug'
-            archiveArtifacts(artifacts: 'bin/', allowEmptyArchive: true, onlyIfSuccessful: true)
-          }
+    stage('Restore packages') {
+        steps {
+            sh 'dotnet restore AV.AvA.sln'
         }
-
-        stage('build release') {
-          steps {
-            sh 'dotnet publish AV.AvA.sln -c Release'
-            archiveArtifacts(allowEmptyArchive: true, onlyIfSuccessful: true, artifacts: 'bin/')
-          }
-        }
-
-      }
     }
-
+    stage('Clean') {
+        steps {
+            sh 'dotnet clean AV.AvA.sln --configuation Debug'
+        }
+    }
+    stage('Build') {
+        steps {
+            sh 'dotnet build AV.AvA.sln --configuation Debug --no-restore'
+        }
+    }
+    stage('Publish') {
+        steps {
+            sh 'dotnet publish AV.AvA.sln --configuation Debug --no-restore'
+        }
+    }
   }
 }
