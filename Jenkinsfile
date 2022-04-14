@@ -29,7 +29,7 @@ pipeline {
     stage('Test entityframework') {
         steps {
             sh 'dotnet tool install --global dotnet-ef'
-            sh 'export PATH="$PATH:/tmp/DOTNET_CLI_HOME/.dotnet/tools'
+            sh 'export PATH="$PATH:/tmp/DOTNET_CLI_HOME/.dotnet/tools"'
             sh 'dotnet ef dbcontext info  --startup-project src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj --project src/AV.AvA.Data/AV.AvA.Data.csproj'
         }
     }
