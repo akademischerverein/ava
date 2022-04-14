@@ -26,16 +26,16 @@ pipeline {
             sh 'dotnet build -c Release AV.AvA.sln'
         }
     }
+    stage('Test entityframework') {
+        steps {
+            sh 'dotnet ef dbcontext info  --startup-project src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj --project src/AV.AvA.Data/AV.AvA.Data.csproj'
+        }
+    }
     stage('Publish') {
         steps {
             sh 'dotnet publish -c Release AV.AvA.sln'
+            archiveArtifacts artifacts: 'bin/', followSymlinks: false, onlyIfSuccessful: true
         }
-    }
-  }
-
-  post {
-    always {
-        archiveArtifacts artifacts: 'bin/'
     }
   }
 }
