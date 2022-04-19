@@ -13,18 +13,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.39.0" />
-    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.39.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0-rc.1.21452.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-rc.1.21452.10">
+    <PackageReference Include="Grpc.AspNetCore" Version="2.44.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.44.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
     <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.17.0" />
     <PackageReference Include="NodaTime.Serialization.Protobuf" Version="2.0.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
+    <PackageReference Include="System.Text.Json" Version="6.0.3" />
   </ItemGroup>
 
   <ItemGroup>
