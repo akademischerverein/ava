@@ -12,7 +12,11 @@
 
     @Person.NachnamePraefix
     @Person.Nachname
-    @Person.SuffixTitel
+    @if (!string.IsNullOrWhiteSpace(Person.SuffixTitel))
+    {
+        @:, @Person.SuffixTitel
+    }
+
     @if (!string.IsNullOrEmpty(Person.Geburtsname))
     {
         <small style="font-size: 50%">
