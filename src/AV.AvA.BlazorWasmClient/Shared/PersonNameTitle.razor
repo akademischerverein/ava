@@ -1,29 +1,47 @@
 ﻿@using AV.AvA.Model
 
-<MudText Typo="Typo.h2" Class="ma-8">
-    <small style="font-size: 50%">@Person.PraefixTitel</small>
-    <br />
-    @Person.Vorname
-    @Person.Zweitnamen
-    @foreach (var spitzname in Person.Spitznamen)
-    {
-        @: "@spitzname"
-    }
+<MudGrid Spacing="0" Style="margin-top: 32px; margin-bottom: 32px;">
+    <MudItem xs="9">
+        <MudText Typo="Typo.h2" Class="ma-8">
+            <small style="font-size: 50%">@Person.PraefixTitel</small>
+            <br/>
+            @Person.Vorname
+            @Person.Zweitnamen
+            @foreach (var spitzname in Person.Spitznamen)
+            {
+                @: "@spitzname"
+            }
 
-    @Person.NachnamePraefix
-    @Person.Nachname
-    @if (!string.IsNullOrWhiteSpace(Person.SuffixTitel))
-    {
-        @:, @Person.SuffixTitel
-    }
+            @Person.NachnamePraefix
+            @Person.Nachname
+            @if (!string.IsNullOrWhiteSpace(Person.SuffixTitel))
+            {
+                @:, @Person.SuffixTitel
+            }
 
-    @if (!string.IsNullOrEmpty(Person.Geburtsname))
-    {
-        <small style="font-size: 50%">
-            geb. @Person.GeburtsnamePraefix @Person.Geburtsname
-        </small>
-    }
-</MudText>
+            @if (!string.IsNullOrEmpty(Person.Geburtsname))
+            {
+                <small style="font-size: 50%">
+                    geb. @Person.GeburtsnamePraefix @Person.Geburtsname
+                </small>
+            }
+        </MudText>
+    </MudItem>
+    <MudItem xs="2">
+        <MudCarousel Class="mud-width-full justify-right rounded-lg" ShowArrows="true" ShowBullets="true" AutoCycle="false" TData="object" Style="height: 400px; padding-left: 15px;">
+            <MudCarouselItem Transition="Transition.Slide">
+                <div style="height: 100%">
+                    <MudImage Fluid="true" Src="20180408-4407.jpg"/>
+                </div>
+            </MudCarouselItem>
+            <MudCarouselItem Transition="Transition.Slide">
+                <div style="height: 100%">
+                    <MudImage Fluid="true" Src="20180408-4407sw.jpg"/>
+                </div>
+            </MudCarouselItem>
+        </MudCarousel>
+    </MudItem>
+</MudGrid>
 
 @code {
     [Parameter]
