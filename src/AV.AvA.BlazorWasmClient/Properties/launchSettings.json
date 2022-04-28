@@ -11,7 +11,7 @@
     "AV.AvA.BlazorWasmClient": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7190/Details/138225",
+      "launchUrl": "https://localhost:7190/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
