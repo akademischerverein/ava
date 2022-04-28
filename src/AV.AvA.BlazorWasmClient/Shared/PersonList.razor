@@ -1,37 +1,96 @@
 ﻿@using AV.AvA.Model
-<MudList Clickable="true">
-	@if (PersonVersions == null)
-	{
-		<MudListItem Icon="@Icons.Material.Filled.AccountCircle" Disabled="true">
-			<MudSkeleton />
-		</MudListItem>
-		<MudListItem Icon="@Icons.Material.Filled.AccountCircle" Disabled="true">
-			<MudSkeleton />
-		</MudListItem>
-		<MudListItem Icon="@Icons.Material.Filled.AccountCircle" Disabled="true">
-			<MudSkeleton />
-		</MudListItem>
-	}
-	else
-	{
-		@foreach (var pv in PersonVersions ?? Enumerable.Empty<PersonVersion>())
-		{
-			var detailHref = $"/Details/{pv.AvId}";
-			var editHref = $"/Edit/{pv.AvId}";
-			var p = pv.Person;
-			<MudListItem Href="@detailHref" Icon="@Icons.Material.Filled.AccountCircle">
-				@p.Vorname
-				@p.Zweitnamen
-				@p.NachnamePraefix
-				@p.Nachname
-				<MudIconButton Link="@editHref" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Edge="Edge.End" Class="mx-3" />
-			</MudListItem>
-		}
-	}
 
-</MudList>
+<MudTable Items="@PersonVersions" Hover="true" Striped="true" Filter="new Func<PersonVersion, bool>(FilterFunc)" SortLabel="Sortieren" Class="ma-4">
+    <ToolBarContent>
+        <MudText Typo="Typo.h5">Personen</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Suche" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 align-self-start"></MudTextField>
+        <MudIconButton Icon="@Icons.Material.Filled.FilterAlt" Color="Color.Inherit" @onclick=@ToggleSettings />
+        <MudPopover Open="@settingsOpen" Fixed="true" Class="px-4 pt-4"  AnchorOrigin="@Origin.TopRight" TransformOrigin="@Origin.TopRight">
+            <div class="d-flex flex-column">
+                <MudText Typo="Typo.subtitle2">Filter</MudText>
+                <MudSwitch @bind-Checked="showVerstorben">Verstorbene anzeigen</MudSwitch>
+                <MudSwitch @bind-Checked="showAusgetreten" Disabled="true">Ausgetretene anzeigen</MudSwitch>
+                <MudButton OnClick="@ToggleSettings" Class="ml-auto mt-4 mb-4" Variant="Variant.Outlined" Color="Color.Secondary">Schließen</MudButton>
+            </div>
+        </MudPopover>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy=@SortKeyVorname>Vorname</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy=@SortKeyNachname InitialDirection="SortDirection.Ascending">Nachname</MudTableSortLabel></MudTh>
+        <MudTh>Aktionen</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Vorname">
+            @context.Person.Vorname @context.Person.Zweitnamen
+        </MudTd>
+        <MudTd DataLabel="Nachname">
+            @context.Person.NachnamePraefix @context.Person.Nachname
+        </MudTd>
+        <MudTd DataLabel="Aktionen">
+			<MudIconButton Href=@DetailUrl(context) Icon="@Icons.Outlined.FileOpen" Edge="Edge.Start" Size="Size.Small" Class="mx-3" />
+			<MudIconButton Href=@DetailUrl(context) Icon="@Icons.Material.Filled.Edit" Edge="Edge.End" Size="Size.Small" Class="mx-3" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
 
 @code {
-	[Parameter]
-	public IReadOnlyCollection<PersonVersion>? PersonVersions { get; set; }
+    private string searchString = "";
+    private bool settingsOpen = false;
+    private bool showVerstorben = false;
+    private bool showAusgetreten = true;
+
+    public void ToggleSettings()
+    {
+        settingsOpen = !settingsOpen;
+    }
+
+    [Parameter]
+    public IReadOnlyCollection<PersonVersion>? PersonVersions { get; set; }
+
+    private Func<PersonVersion, object> SortKeyVorname = new (pv => (
+        pv.Person.Vorname ?? "",
+        pv.Person.Zweitnamen ?? "",
+        pv.Person.Nachname ?? "",
+        pv.Person.NachnamePraefix ?? ""
+    ));
+
+    private Func<PersonVersion, object> SortKeyNachname = new (pv => (
+        pv.Person.Nachname ?? "",
+        pv.Person.NachnamePraefix ?? "",
+        pv.Person.Vorname ?? "",
+        pv.Person.Zweitnamen ?? ""
+    ));
+
+    private bool FilterFunc(PersonVersion pv)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (!showVerstorben && pv.Person.Status.Any((s) => s.Typ == StatusEreignisTyp.Verstorben))
+            return false;
+        if (!showAusgetreten && pv.Person.Status.Any((s) => s.Typ == StatusEreignisTyp.AusscheidenAktivitas))
+            return false;
+        if (!showAusgetreten && pv.Person.Status.Any((s) => s.Typ == StatusEreignisTyp.AusscheidenAVeV))
+            return false;
+        if (!showAusgetreten && pv.Person.Status.Any((s) => s.Typ == StatusEreignisTyp.AusscheidenHG))
+            return false;
+        return searchString
+            .Split(" ")
+            .All((s) =>
+                pv.Person.Vorname.Contains(s, StringComparison.InvariantCultureIgnoreCase) ||
+                (pv.Person.Zweitnamen ?? "").Contains(s, StringComparison.InvariantCultureIgnoreCase) ||
+                pv.Person.Nachname.Contains(s, StringComparison.InvariantCultureIgnoreCase) ||
+                (pv.Person.NachnamePraefix ?? "").Contains(s, StringComparison.InvariantCultureIgnoreCase)
+            );
+    }
+
+    private string DetailUrl(PersonVersion pv)
+    {
+        return $"/Details/{pv.AvId}";
+    }
+
+    private string EditUrl(PersonVersion pv)
+    {
+        return $"/Edit/{pv.AvId}";
+    }
 }
