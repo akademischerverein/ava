@@ -2,6 +2,10 @@
 
 version: '3'
 services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
   wasm:
     # will build ./src/AV.AvA.BlazorWasmClient/Dockerfile
     build:
