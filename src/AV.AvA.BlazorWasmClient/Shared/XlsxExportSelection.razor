@@ -2,35 +2,64 @@
 @using AV.AvA.BlazorWasmClient.Services
 @using AutoMapper
 @using ClosedXML.Excel
+@using NodaTime
 @inject IPersonVersionAccessor pva
 @inject IMapper mapper
+@inject IClock clock
 
 <div class="ma-8">
     <FileDownload @ref="currentRecordDownload" FileName="AvaExport.xlsx" StreamFactory="GetCurrentRecordsXlsxStream" />
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerCurrentRecordDownload">
         Aktuellen Stand exportieren
     </MudButton>
+    <br>
+
+    <FileDownload @ref="emailListDownload" FileName="AvaEmailList.xlsx" StreamFactory="GetEmailListXlsxStream" />
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerEmailListDownload" Class="my-4">
+        E-Mail-Liste exportieren
+    </MudButton>
 </div>
 
 @code {
     FileDownload currentRecordDownload;
+    FileDownload emailListDownload;
 
     private Task TriggerCurrentRecordDownload() => currentRecordDownload.TriggerDownloadAsync();
 
-    private async Task<Stream> GetCurrentRecordsXlsxStream()
+    private Task TriggerEmailListDownload() => emailListDownload.TriggerDownloadAsync();
+
+    private Stream GetXlsxStream<T>(IEnumerable<T> data)
     {
         // this is a factory, don't dispose
         var ms = new MemoryStream();
         using var workbook = new XLWorkbook();
 
         var worksheet = workbook.Worksheets.Add("AVA Export");
-        var recs = await pva.GetCurrentAsync();
-        var xlsxModels = recs.Select(r => mapper.Map<DefaultXlsxExportModel>(r));
-        worksheet.Cell(1, 1).InsertTable(xlsxModels);
+        worksheet.Cell(1, 1).InsertTable(data);
 
         workbook.SaveAs(ms);
         ms.Seek(0, SeekOrigin.Begin);
-        await Task.Delay(1);
         return ms;
+    }
+
+    private async Task<Stream> GetXlsxStream<T>()
+    {
+        var recs = await pva.GetCurrentAsync();
+        var xlsxModels = recs.Select(r => mapper.Map<T>(r));
+        return GetXlsxStream(xlsxModels);
+    }
+
+    private Task<Stream> GetCurrentRecordsXlsxStream() => GetXlsxStream<DefaultXlsxExportModel>();
+
+    private async Task<Stream> GetEmailListXlsxStream()
+    {
+        var now = clock.GetCurrentInstant();
+        var recs = await pva.GetCurrentAsync();
+        var recPerMail = recs.SelectMany(r => r.Person.Emails.Select(e => (r, e)));
+        var valid = recPerMail.Where(x =>
+            (x.e.GueltigVon?.ToInstant() ?? Instant.MinValue) <= now &&
+            (x.e.GueltigBis?.ToInstant() ?? Instant.MaxValue) >= now);
+        var xlsxModels = valid.Select(r => mapper.Map<XlsxEmailExportModel>(r));
+        return GetXlsxStream(xlsxModels);
     }
 }

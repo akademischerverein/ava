@@ -31,6 +31,17 @@ namespace AV.AvA.BlazorWasmClient
                 .ForMember(
                     dest => dest.Spitznamen,
                     opt => opt.MapFrom((src, dest) => string.Join(", ", src.Spitznamen)));
+
+            CreateMap<(Model.PersonVersion PV, Model.Email E), Models.XlsxEmailExportModel>()
+                .AfterMap((src, dest, ctx) => ctx.Mapper.Map(src.PV.Person, dest))
+                .ForMember(
+                    dest => dest.EmailAddress,
+                    opt => opt.MapFrom((src, dest) => src.E.Adresse))
+                .ForMember(
+                    dest => dest.EmailTyp,
+                    opt => opt.MapFrom((src, dest) => src.E.Typ));
+
+            CreateMap<Model.Person, Models.XlsxEmailExportModel>();
         }
     }
 }
