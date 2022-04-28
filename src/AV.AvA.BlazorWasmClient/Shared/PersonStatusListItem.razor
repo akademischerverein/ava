@@ -1,0 +1,27 @@
+﻿@using AV.AvA.Model
+@using System.Globalization
+@using NodaTime
+
+@{
+    var deDe = new CultureInfo("de-DE");
+}
+
+@if (Ereignis.EingetretenAm != null)
+{
+    <MudText Typo="Typo.caption">
+        @Ereignis.EingetretenAm.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+    </MudText>
+    <br />
+}
+@Verein <br /> @Zustand
+
+@code {
+    [Parameter]
+    public StatusEreignis Ereignis { get; set; }
+
+    [Parameter]
+    public string Verein { get; set; }
+
+    [Parameter]
+    public string Zustand { get; set; }
+}

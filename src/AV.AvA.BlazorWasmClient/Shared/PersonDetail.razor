@@ -5,6 +5,11 @@
 @using System.Text.Unicode
 @using System.Diagnostics
 @inject JsonSerializerOptions _jsonOpts
+@using NodaTime
+
+@{
+    var deDe = new CultureInfo("de-DE");
+}
 
 <PersonNameTitle Person="@PersonVersion.Person" />
 
@@ -64,6 +69,80 @@
                 </MudListItem>
             }
 
+            @{
+                StatusEreignis StatusOMAvEv = PersonVersion.Person.Status.Find((s) => (s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedAVeV || s.Typ == StatusEreignisTyp.Uebertritt));
+                StatusEreignis StatusOMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedHG);
+                StatusEreignis StatusOMHGStimmR = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.StimmrechtHGErhalten);
+            }
+
+            @if (StatusOMAvEv != null)
+            {
+                <PersonStatusListItem Ereignis=@StatusOMAvEv Verein="Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied" />
+            }
+            @if (StatusOMHG != null)
+            {
+                if (StatusOMHGStimmR != null)
+                {
+                    <PersonStatusListItem Ereignis=@StatusOMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied mit Stimmrecht" />
+                }
+                else
+                {
+                    <PersonStatusListItem Ereignis=@StatusOMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied" />
+                }
+            }
+            @if ((StatusOMAvEv == null) && (StatusOMHG == null))
+            {
+                StatusEreignis StatusSMAVeV = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedAVeV);
+                StatusEreignis StatusSMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedHG);
+                @if (StatusSMAVeV != null)
+                {
+                    <PersonStatusListItem Ereignis=@StatusSMAVeV Verein="Akademischer Verein Darmstadt e.V." Zustand="studentisches Mitglied" />
+                }
+                @if (StatusSMHG != null)
+                {
+                    <PersonStatusListItem Ereignis=@StatusSMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="studentisches Mitglied" />
+                }
+
+                StatusEreignis StatusVoMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VollmitgliedAufgenommen);
+                StatusEreignis StatusJuMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.JungmitgliedEingesungen);
+                StatusEreignis StatusVerk = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VerkehrsgastAufgenommen);
+
+                @if (StatusVoMi != null)
+                {
+                    <PersonStatusListItem Ereignis=@StatusVoMi Verein="Akademischer Verein an der TU Darmstadt" Zustand="Vollmitglied" />
+                }
+                else if (StatusJuMi != null)
+                {
+                    <PersonStatusListItem Ereignis=@StatusJuMi Verein="Akademischer Verein an der TU Darmstadt" Zustand="Jungmitglied" />
+                }
+                else if (StatusVerk != null)
+                {
+                    <PersonStatusListItem Ereignis=@StatusVerk Verein="Akademischer Verein an der TU Darmstadt" Zustand="Verkehrsgast" />
+                }
+
+            }
+            <MudListItem Class="ml-n3 mt-n3">
+                <div class="d-flex flex-row justify-start">
+                    <MudTable Items="@PersonVersion.Person.Status" Hover="true" Striped="true" Dense="true" Elevation="0" Class="mr">
+                        <HeaderContent>
+                            <MudTh><MudTableSortLabel SortBy=@SortStatusDatum InitialDirection="SortDirection.Ascending">Datum</MudTableSortLabel></MudTh>
+                            <MudTh>Ereignis</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Datum">
+                                @if (context.EingetretenAm.HasValue)
+                                {
+                                    @context.EingetretenAm.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+                                }
+                            </MudTd>
+                            <MudTd DataLabel="Ereignis">
+                                @context.Typ
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                    <MudSpacer />
+                </div>
+            </MudListItem>
         </MudList>
     </MudCardContent>
 </MudCard>
@@ -150,15 +229,25 @@
                         <MudText Typo="Typo.caption">
                             <GueltigVonBis GueltigVon="@arbeitgeber.GueltigVon" GueltigBis="@arbeitgeber.GueltigBis" AddLinebreak="true"/>
                         </MudText>
-                        @arbeitgeber.Position bei @arbeitgeber.Name
+                        @if (!string.IsNullOrEmpty(@arbeitgeber.Position))
+                        {
+                            @: @arbeitgeber.Position bei @arbeitgeber.Name
+                        }
+                        else
+                        {
+                            @: @arbeitgeber.Name
+                        }
                         @if (!string.IsNullOrEmpty(@arbeitgeber.Abteilung))
                         {
                             @: (@arbeitgeber.Abteilung)
                         }
-                        <br />
-                        @arbeitgeber.Adresse.Strasse in 
-                        @arbeitgeber.Adresse.PLZ @arbeitgeber.Adresse.Ort,
-                        @arbeitgeber.Adresse.Land
+                        @if (!string.IsNullOrEmpty(@arbeitgeber.Adresse.Strasse) || !string.IsNullOrEmpty(@arbeitgeber.Adresse.Ort))
+                        {
+                            <br />
+                            @: @arbeitgeber.Adresse.Strasse in 
+                            @: @arbeitgeber.Adresse.PLZ @arbeitgeber.Adresse.Ort,
+                            @: @arbeitgeber.Adresse.Land
+                        }
                         @if (!string.IsNullOrEmpty(arbeitgeber.Adresse.Telefon))
                         {
                             <br />@:Tel:
@@ -191,4 +280,6 @@
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
+
+    private Func<StatusEreignis, object> SortStatusDatum = s => s.EingetretenAm?.ToInstant();
 }
