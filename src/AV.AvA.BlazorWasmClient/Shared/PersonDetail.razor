@@ -79,7 +79,18 @@
                 @foreach (var beziehung in PersonVersion.Person.Beziehungen)
                 {
                     <MudListItem>
-                        @beziehung.Typ von @beziehung.Vorname @beziehung.Nachname
+                        @if ((beziehung.Typ == BeziehungsTyp.Elternteil) && (PersonVersion.Person.Geschlecht == Geschlecht.Maennlich))
+                        {
+                            @:Vater von @beziehung.Vorname @beziehung.Nachname
+                        }
+                        else if ((beziehung.Typ == BeziehungsTyp.Elternteil) && (PersonVersion.Person.Geschlecht == Geschlecht.Weiblich))
+                        {
+                            @:Mutter von @beziehung.Vorname @beziehung.Nachname
+                        }
+                        else
+                        {
+                            @:@beziehung.Typ von @beziehung.Vorname @beziehung.Nachname
+                        }
                         <MudText Typo="Typo.caption">
                             <GueltigVonBis GueltigVon="@beziehung.GueltigVon" GueltigBis="@beziehung.GueltigBis" />
                         </MudText>
