@@ -7,15 +7,12 @@
 @using System.Collections.ObjectModel
 @using AV.AvA.BlazorWasmClient.Services
 @inject JsonSerializerOptions _jsonOpts
-<<<<<<< HEAD
+@inject IPersonVersionAccessor pva
 @using NodaTime
 
 @{
     var deDe = new CultureInfo("de-DE");
 }
-=======
-@inject IPersonVersionAccessor pva
->>>>>>> 111c3e9 (history list)
 
 <PersonNameTitle Person="@PersonVersion.Person" />
 
