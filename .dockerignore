@@ -1,7 +1,7 @@
 **/.classpath
 **/.dockerignore
 **/.env
-**/.git
+# **/.git # we need source control information during build
 **/.gitignore
 **/.project
 **/.settings
