@@ -10,12 +10,9 @@
                 @{
                     string? Caption = email.Typ switch
                     {
-                        AdressTyp.Primaer => "primär",
-                        AdressTyp.Studien => "Studium",
-                        AdressTyp.Temporaer => "temporär",
-                        AdressTyp.Eltern => "Eltern",
-                        AdressTyp.Geschaeftlich => "geschäftlich",
-                        AdressTyp.Andere => null,
+                        EmailTyp.Primaer => "primär",
+                        EmailTyp.Geschaeftlich => "geschäftlich",
+                        EmailTyp.Andere => null,
                         _ => throw new ArgumentOutOfRangeException(nameof(email.Typ), $"Not expected AdressTyp value: {email.Typ}"),
                     };
                 }
