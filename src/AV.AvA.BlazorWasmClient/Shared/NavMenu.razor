@@ -1,9 +1,10 @@
 ﻿<MudNavMenu>
-    <MudNavLink Href="/Personen">Alle Personen</MudNavLink>
-    <MudNavLink Href="/Geburtstage">Geburtstage</MudNavLink>
-    <MudNavGroup Title="Settings" Expanded="true">
+    <MudNavLink Icon="@Icons.Filled.People" Href="/">Alle Personen</MudNavLink>
+    <MudNavLink Icon="@Icons.Custom.FileFormats.FileExcel" Href="/XlsxExport">Excel Export</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.Cake" Href="/Geburtstage">Geburtstage</MudNavLink>
+    <MudNavGroup Icon="@Icons.Filled.Settings" Title="Settings" Expanded="true">
         <MudNavLink Href="/users">Users</MudNavLink>
         <MudNavLink Href="/security">Security</MudNavLink>
     </MudNavGroup>
-    <MudNavLink Href="/about">About</MudNavLink>
+    <MudNavLink Icon="@Icons.Filled.QuestionMark" Href="/about">About</MudNavLink>
 </MudNavMenu>
