@@ -7,9 +7,11 @@
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        AV:Adressen
+        <MudIconButton Icon="@AvaTheme.AvLogo" Color="Color.Inherit" Class="pa-3" Style="background: var(--mud-palette-white, #FFFFFF)"/>
+        <MudText Style="margin-left: 12px"><strong>AV&thinsp;&ndash;&thinsp;Adressverwaltung</strong></MudText>
+        <MudSpacer />
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen">
+    <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
