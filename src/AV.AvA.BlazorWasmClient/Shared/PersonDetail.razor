@@ -4,12 +4,18 @@
 @using System.Text.Encodings.Web
 @using System.Text.Unicode
 @using System.Diagnostics
+@using System.Collections.ObjectModel
+@using AV.AvA.BlazorWasmClient.Services
 @inject JsonSerializerOptions _jsonOpts
+<<<<<<< HEAD
 @using NodaTime
 
 @{
     var deDe = new CultureInfo("de-DE");
 }
+=======
+@inject IPersonVersionAccessor pva
+>>>>>>> 111c3e9 (history list)
 
 <PersonNameTitle Person="@PersonVersion.Person" />
 
@@ -244,7 +250,7 @@
                         @if (!string.IsNullOrEmpty(@arbeitgeber.Adresse.Strasse) || !string.IsNullOrEmpty(@arbeitgeber.Adresse.Ort))
                         {
                             <br />
-                            @: @arbeitgeber.Adresse.Strasse in 
+                            @: @arbeitgeber.Adresse.Strasse in
                             @: @arbeitgeber.Adresse.PLZ @arbeitgeber.Adresse.Ort,
                             @: @arbeitgeber.Adresse.Land
                         }
@@ -261,6 +267,42 @@
 }
 
 <MudExpansionPanels Class="ma-8">
+    <MudExpansionPanel Text="Frühere Versionen" IsExpandedChanged="LoadHistory">
+        <MudSimpleTable Style="overflow-x: auto;">
+            <thead>
+            <tr>
+                <th>Änderungsdatum</th>
+                <th>Änderungsgrund</th>
+                <th>Von</th>
+                <th>Aktionen</th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var oldVer in _oldVersions.OrderBy((pv) => pv.CommittedAt))
+                {
+                    var detailsHistory = $"/HistoryDetails/{oldVer.PersonVersionId}";
+                    <tr>
+                    <td>@oldVer.CommittedAt</td>
+                    <td>@oldVer.CommitMessage</td>
+                    @if (oldVer.ComitterAvId.HasValue)
+                    {
+                        <td>@Beziehungen[oldVer.ComitterAvId.Value].Person.Vorname @Beziehungen[oldVer.ComitterAvId.Value].Person.Nachname</td>
+                    }
+                    else
+                    {
+                        <td>System</td>
+                    }
+                        <td>
+                            <MudIconButton Href="@detailsHistory" Icon="@Icons.Filled.ReadMore" Edge="Edge.End" Size="Size.Small" Class="mx-3"/>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+<MudExpansionPanels Class="ma-8">
     <MudExpansionPanel Text="Rohdaten">
         <pre>
             @(JsonSerializer.Serialize(PersonVersion, JsonPrettyOpts))
@@ -275,6 +317,8 @@
     [Parameter]
     public Dictionary<int, PersonVersion?> Beziehungen { get; set; }
 
+    private IReadOnlyCollection<PersonVersion> _oldVersions = new List<PersonVersion>();
+
     private JsonSerializerOptions JsonPrettyOpts => new(_jsonOpts)
     {
         WriteIndented = true,
@@ -282,4 +326,21 @@
     };
 
     private Func<StatusEreignis, object> SortStatusDatum = s => s.EingetretenAm?.ToInstant();
+
+    private async Task LoadHistory(bool newVal)
+    {
+        if (!newVal)
+        {
+            return;
+        }
+        _oldVersions = await pva.GetAllByAvIdAsync(PersonVersion.AvId);
+
+        foreach (var oldPv in _oldVersions)
+        {
+            if (oldPv.ComitterAvId.HasValue && !Beziehungen.ContainsKey(oldPv.ComitterAvId.Value))
+            {
+                Beziehungen[oldPv.ComitterAvId.Value] = await pva.GetCurrentByAvIdAsync(oldPv.ComitterAvId.Value);
+            }
+        }
+    }
 }
