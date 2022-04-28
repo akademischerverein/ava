@@ -149,14 +149,13 @@
     </MudCard>
 }
 
-<MudCard Outlined="true" Class="ma-8">
-    <MudCardContent>
-        <MudText Typo="Typo.h6">Rohdaten</MudText>
+<MudExpansionPanels Class="ma-8">
+    <MudExpansionPanel Text="Rohdaten">
         <pre>
             @(JsonSerializer.Serialize(PersonVersion, JsonPrettyOpts))
         </pre>
-    </MudCardContent>
-</MudCard>
+    </MudExpansionPanel>
+</MudExpansionPanels>
 
 @code {
     [Parameter]
