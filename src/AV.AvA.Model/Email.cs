@@ -11,7 +11,7 @@ public class Email
 
     public string Adresse { get; set; } = default!;
 
-    public AdressTyp Typ { get; set; }
+    public EmailTyp Typ { get; set; }
 
     public List<EmailFlag> Flags { get; set; } = default!;
 }
