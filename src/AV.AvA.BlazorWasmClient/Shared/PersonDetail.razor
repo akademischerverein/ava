@@ -81,24 +81,35 @@
                     <MudListItem>
                         @if ((beziehung.Typ == BeziehungsTyp.Elternteil) && (PersonVersion.Person.Geschlecht == Geschlecht.Maennlich))
                         {
-                            @:Vater von @beziehung.Vorname @beziehung.Nachname
+                            @:Vater von
                         }
                         else if ((beziehung.Typ == BeziehungsTyp.Elternteil) && (PersonVersion.Person.Geschlecht == Geschlecht.Weiblich))
                         {
-                            @:Mutter von @beziehung.Vorname @beziehung.Nachname
+                            @:Mutter von
                         }
                         else
                         {
-                            @:@beziehung.Typ von @beziehung.Vorname @beziehung.Nachname
+                            @:@beziehung.Typ von
+                        }
+                        @if (beziehung.AvId.HasValue && Beziehungen.ContainsKey(beziehung.AvId.Value))
+                        {
+                            var detailHref = $"/Details/{beziehung.AvId.Value}";
+                            <MudButton Href="@detailHref" Variant="Variant.Text" Color="Color.Primary" Size="Size.Medium">
+                                @Beziehungen[beziehung.AvId.Value].Person.Vorname @Beziehungen[beziehung.AvId.Value].Person.Nachname
+                            </MudButton>
+                        }
+                        else
+                        {
+                            @:@beziehung.Vorname @beziehung.Nachname
                         }
                         <MudText Typo="Typo.caption">
-                            <GueltigVonBis GueltigVon="@beziehung.GueltigVon" GueltigBis="@beziehung.GueltigBis" />
+                            <GueltigVonBis GueltigVon="@beziehung.GueltigVon" GueltigBis="@beziehung.GueltigBis"/>
                         </MudText>
                     </MudListItem>
                 }
             </MudList>
         </MudCardContent>
-    </MudCard>   
+    </MudCard>
 }
 
 @if (PersonVersion.Person.Ausbildungen.Count > 0)
@@ -171,6 +182,9 @@
 @code {
     [Parameter]
     public PersonVersion PersonVersion { get; set; }
+
+    [Parameter]
+    public Dictionary<int, PersonVersion?> Beziehungen { get; set; }
 
     private JsonSerializerOptions JsonPrettyOpts => new(_jsonOpts)
     {
