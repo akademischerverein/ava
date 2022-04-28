@@ -1,0 +1,36 @@
+﻿@using AV.AvA.BlazorWasmClient.Models
+@using AV.AvA.BlazorWasmClient.Services
+@using AutoMapper
+@using ClosedXML.Excel
+@inject IPersonVersionAccessor pva
+@inject IMapper mapper
+
+<div class="ma-8">
+    <FileDownload @ref="currentRecordDownload" FileName="AvaExport.xlsx" StreamFactory="GetCurrentRecordsXlsxStream" />
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerCurrentRecordDownload">
+        Aktuellen Stand exportieren
+    </MudButton>
+</div>
+
+@code {
+    FileDownload currentRecordDownload;
+
+    private Task TriggerCurrentRecordDownload() => currentRecordDownload.TriggerDownloadAsync();
+
+    private async Task<Stream> GetCurrentRecordsXlsxStream()
+    {
+        // this is a factory, don't dispose
+        var ms = new MemoryStream();
+        using var workbook = new XLWorkbook();
+
+        var worksheet = workbook.Worksheets.Add("AVA Export");
+        var recs = await pva.GetCurrentAsync();
+        var xlsxModels = recs.Select(r => mapper.Map<DefaultXlsxExportModel>(r));
+        worksheet.Cell(1, 1).InsertTable(xlsxModels);
+
+        workbook.SaveAs(ms);
+        ms.Seek(0, SeekOrigin.Begin);
+        await Task.Delay(1);
+        return ms;
+    }
+}

@@ -1,0 +1,20 @@
+﻿@using System.IO
+@inject IJSRuntime JS
+
+@code {
+    [Parameter]
+    public Func<Task<Stream>>? StreamFactory { get; set; }
+
+    [Parameter]
+    public string? FileName { get; set; }
+
+    public async Task TriggerDownloadAsync()
+    {
+        using var fileStream = await (StreamFactory ?? throw new InvalidOperationException($"{nameof(StreamFactory)} not set."))();
+        var fileName = FileName ?? throw new InvalidOperationException($"{nameof(FileName)} not set.");
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+}

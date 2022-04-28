@@ -21,6 +21,16 @@ namespace AV.AvA.BlazorWasmClient
                     dest => dest.CommittedAt,
                     opt => opt.MapFrom((src, dest) =>
                         Instant.FromDateTimeOffset(src.CommittedAt.ToDateTimeOffset())));
+
+            CreateMap<Model.PersonVersion, Models.DefaultXlsxExportModel>()
+                .AfterMap((src, dest, ctx) => ctx.Mapper.Map(src.Person, dest));
+
+            CreateMap<LocalDate, DateTime>().ConvertUsing(s => s.ToDateTimeUnspecified());
+
+            CreateMap<Model.Person, Models.DefaultXlsxExportModel>()
+                .ForMember(
+                    dest => dest.Spitznamen,
+                    opt => opt.MapFrom((src, dest) => string.Join(", ", src.Spitznamen)));
         }
     }
 }
