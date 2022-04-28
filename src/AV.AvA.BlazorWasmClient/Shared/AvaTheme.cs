@@ -8,7 +8,7 @@ namespace AV.AvA.BlazorWasmClient.Shared
         {
             Palette = new Palette()
             {
-                Primary = Colors.Red.Darken2,
+                Primary = Colors.Blue.Darken2,
                 Secondary = Colors.Grey.Darken1,
                 AppbarBackground = Colors.Red.Darken2,
             },
