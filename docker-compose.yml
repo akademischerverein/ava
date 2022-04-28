@@ -1,0 +1,13 @@
+# See https://stackoverflow.com/a/48243640/1200847
+
+version: '3'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
+  wasm:
+    # will build ./src/AV.AvA.BlazorWasmClient/Dockerfile
+    build:
+      context: .
+      dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
