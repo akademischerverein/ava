@@ -1,8 +1,8 @@
 # Assumes the build context directory is the repo root
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-ARG aot
-RUN if [[ -n "$aot" ]] ; then dotnet workload install wasm-tools ; fi
+ARG AOT=
+RUN if [[ -n "$AOT" ]] ; then dotnet workload install wasm-tools ; fi
 WORKDIR /src
 COPY ["AV.AvA.sln", "./"]
 COPY ["Directory.Build.props", "./"]
@@ -14,7 +14,7 @@ COPY . .
 RUN dotnet build "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o /app/publish /p:RunAOTCompilation=$aot
+RUN dotnet publish "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o /app/publish /p:RunAOTCompilation=$AOT
 
 FROM fholzer/nginx-brotli:latest AS final
 WORKDIR /usr/share/nginx/html
