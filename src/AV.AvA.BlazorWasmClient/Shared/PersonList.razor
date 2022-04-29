@@ -16,8 +16,8 @@
         </MudPopover>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy=@SortKeyVorname>Vorname</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy=@SortKeyNachname InitialDirection="SortDirection.Ascending">Nachname</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy=@CreateSortKeyVorname>Vorname</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy=@CreateSortKeyNachname InitialDirection="SortDirection.Ascending">Nachname</MudTableSortLabel></MudTh>
         <MudTh>Aktionen</MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -48,19 +48,19 @@
     [Parameter]
     public IReadOnlyCollection<PersonVersion>? PersonVersions { get; set; }
 
-    private Func<PersonVersion, object> SortKeyVorname = new (pv => (
+    private Func<PersonVersion, object> CreateSortKeyVorname = pv => (
         pv.Person.Vorname ?? "",
         pv.Person.Zweitnamen ?? "",
         pv.Person.Nachname ?? "",
         pv.Person.NachnamePraefix ?? ""
-    ));
+    );
 
-    private Func<PersonVersion, object> SortKeyNachname = new (pv => (
+    private Func<PersonVersion, object> CreateSortKeyNachname = pv => (
         pv.Person.Nachname ?? "",
         pv.Person.NachnamePraefix ?? "",
         pv.Person.Vorname ?? "",
         pv.Person.Zweitnamen ?? ""
-    ));
+    );
 
     private bool FilterFunc(PersonVersion pv)
     {
