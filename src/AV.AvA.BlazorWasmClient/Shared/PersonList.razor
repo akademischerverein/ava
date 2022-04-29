@@ -1,6 +1,6 @@
 ﻿@using AV.AvA.Model
 
-<MudTable Items="@PersonVersions" Hover="true" Striped="true" Filter="new Func<PersonVersion, bool>(FilterFunc)" SortLabel="Sortieren" Class="ma-4">
+<MudTable Items="@PersonVersions" Hover="true" Striped="true" Virtualize="true" Filter="FilterFunc" SortLabel="Sortieren" Class="ma-4">
     <ToolBarContent>
         <MudText Typo="Typo.h5">Personen</MudText>
         <MudSpacer />
