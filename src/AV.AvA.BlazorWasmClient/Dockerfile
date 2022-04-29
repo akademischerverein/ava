@@ -1,6 +1,7 @@
 # Assumes the build context directory is the repo root
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+RUN dotnet workload install wasm-tools
 WORKDIR /src
 COPY ["AV.AvA.sln", "./"]
 COPY ["Directory.Build.props", "./"]
