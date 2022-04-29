@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using AV.AvA.BlazorWasmClient.Services
 @using AV.AvA.Model
 @layout AuthedLayout
@@ -9,9 +9,8 @@
 @code {
 	IReadOnlyCollection<PersonVersion> _persons = default!;
 
-	protected override async Task OnInitializedAsync()
-	{
-		_persons = await pva.GetCurrentAsync();
-		StateHasChanged();
+    protected override async Task OnInitializedAsync()
+    {
+        _persons = await pva.GetCurrentAsync();
 	}
 }
