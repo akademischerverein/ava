@@ -70,7 +70,7 @@ jobs:
         context: .
         file: ./src/AV.AvA.BlazorWasmClient/Dockerfile
         build-args: |
-          aot=true
+          AOT=true
         builder: ${{ steps.buildx.outputs.name }}
         push: true
         tags: ${{ steps.meta2.outputs.tags }}
