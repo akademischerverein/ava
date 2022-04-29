@@ -12,7 +12,7 @@ COPY . .
 RUN dotnet build "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o /app/publish
+RUN dotnet publish "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o /app/publish /p:RunAOTCompilation=true
 
 FROM fholzer/nginx-brotli:latest AS final
 WORKDIR /usr/share/nginx/html
