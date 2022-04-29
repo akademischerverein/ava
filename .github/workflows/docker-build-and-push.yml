@@ -1,7 +1,8 @@
-name: Docker Compose Build and Push
+name: Docker Build and Push
 
 on:
-  push
+  release:
+    types: [published]
 
 env:
   REGISTRY: ghcr.io
@@ -29,6 +30,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    # Storage Backend
     - name: Extract metadata (tags, labels) for backend
       id: meta1
       uses: docker/metadata-action@v3
@@ -51,6 +53,7 @@ jobs:
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
 
+    # WASM
     - name: Extract metadata (tags, labels) for wasm
       id: meta2
       uses: docker/metadata-action@v3
