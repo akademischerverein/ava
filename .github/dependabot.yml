@@ -10,6 +10,10 @@ updates:
   schedule:
     interval: daily
 - package-ecosystem: "docker"
-  directory: "/"
+  directory: "/src/AV.AvA.BlazorWasmClient/"
+  schedule:
+    interval: "daily"
+- package-ecosystem: "docker"
+  directory: "/src/AV.AvA.StorageBackend/"
   schedule:
     interval: "daily"
