@@ -34,8 +34,10 @@ pipeline {
     }
     stage('Publish') {
         steps {
-            sh 'dotnet publish -c Release AV.AvA.sln'
-            archiveArtifacts artifacts: 'bin/', followSymlinks: false, onlyIfSuccessful: true
+            sh 'dotnet publish "src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj" -c Release -o publish-backend'
+            sh 'dotnet publish "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o publish-frontend'
+            sh 'dotnet publish "src/AV.AvA.BackupTool/AV.AvA.BackupTool.csproj" -c Release -o publish-tool'
+            archiveArtifacts artifacts: 'publish-backend/, publish-frontend/, publish-tool/', followSymlinks: false, onlyIfSuccessful: true
         }
     }
   }
