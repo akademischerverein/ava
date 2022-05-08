@@ -1,0 +1,20 @@
+name: Create GitHub Release
+
+on:
+  push:
+    branches:
+      - 'release/v+.+'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+      - uses: dotnet/nbgv@v0.4.0
+        id: nbgv
+      - uses: softprops/action-gh-release@v1
+        with:
+          tag_name: {{ steps.nbgv.outputs.SemVer2 }}
+          draft: false # could be set to true later, makes releasing less automatic though
