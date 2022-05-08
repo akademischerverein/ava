@@ -6,14 +6,18 @@
     var deDe = new CultureInfo("de-DE");
 }
 
-@if (Ereignis.EingetretenAm != null)
-{
-    <MudText Typo="Typo.caption">
-        @Ereignis.EingetretenAm.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
-    </MudText>
-    <br />
-}
-@Verein <br /> @Zustand
+<MudListItem>
+
+    @if (Ereignis.EingetretenAm != null)
+    {
+        <MudText Typo="Typo.caption">
+            @Ereignis.EingetretenAm.Value.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)
+        </MudText>
+        <br />
+    }
+    @Verein <br /> @Zustand
+</MudListItem>
+
 
 @code {
     [Parameter]
