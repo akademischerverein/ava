@@ -12,3 +12,4 @@
 * fyi, keine weitere Aktion erforderlich
   * [NBGV](https://github.com/dotnet/Nerdbank.GitVersioning), Versionierung anhand git-depth
   * [StyleCop.Analyzers](https://www.nuget.org/packages/StyleCop.Analyzers/), einheitlicher Code-style
+  * [icongen](https://cthedot.de/icongen/), PWA Icons & Favicon aus SVG, hat besser geklappt als [PWA Builder](https://www.pwabuilder.com/imageGenerator)
