@@ -25,7 +25,15 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddGrpcClient<PersonVersionRepository.PersonVersionRepositoryClient>(options =>
 {
-    options.Address = new Uri("https://localhost:7195");
+    if (builder.HostEnvironment.BaseAddress.Contains("localhost"))
+    {
+        options.Address = new Uri("https://localhost:7195");
+    }
+    else
+    {
+        options.Address = new Uri(builder.HostEnvironment.BaseAddress);
+    }
+
 })
 .ConfigurePrimaryHttpMessageHandler(
     () => new GrpcWebHandler(new HttpClientHandler()));
