@@ -16,5 +16,5 @@ jobs:
         id: nbgv
       - uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.nbgv.outputs.SemVer2 }}
+          tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
           draft: false # could be set to true later, makes releasing less automatic though
