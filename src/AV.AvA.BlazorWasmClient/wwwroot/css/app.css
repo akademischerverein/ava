@@ -37,6 +37,10 @@
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
+
+div.mud-table.table-layout-fixed > div.mud-table-container > table.mud-table-root  {
+    table-layout: fixed;
+}

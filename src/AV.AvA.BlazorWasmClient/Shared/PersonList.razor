@@ -1,6 +1,6 @@
 ﻿@using AV.AvA.Model
 
-<MudTable Virtualize="@true" Height="80vh" Items="@PersonVersions" Hover="true" Striped="true" Filter="FilterFunc" SortLabel="Sortieren" Class="ma-4">
+<MudTable Virtualize="@true" Height="calc(100vh - var(--mud-appbar-height) - 32px - 64px)" Items="@PersonVersions" Hover="true" Striped="true" Filter="FilterFunc" SortLabel="Sortieren" Class="ma-4 table-layout-fixed" FixedHeader="true">
     <ToolBarContent>
         <MudText Typo="Typo.h5">Personen</MudText>
         <MudSpacer />
@@ -18,7 +18,7 @@
     <HeaderContent>
         <MudTh><MudTableSortLabel SortBy=@CreateSortKeyVorname>Vorname</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy=@CreateSortKeyNachname InitialDirection="SortDirection.Ascending">Nachname</MudTableSortLabel></MudTh>
-        <MudTh>Aktionen</MudTh>
+        <MudTh Style="width: 10em;">Aktionen</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Vorname">
