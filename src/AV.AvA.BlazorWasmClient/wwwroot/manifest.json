@@ -1,10 +1,10 @@
 {
-  "name": "AV.AvA.BlazorWasmClient",
-  "short_name": "AV.AvA.BlazorWasmClient",
+  "name": "AV Adressverwaltung",
+  "short_name": "AvA",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#03173d",
+  "theme_color": "#ee2729",
   "prefer_related_applications": false,
   "icons": [
     {

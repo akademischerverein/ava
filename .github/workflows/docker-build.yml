@@ -1,7 +1,9 @@
 name: Docker Compose Build CI
 
 on:
-  push
+  push:
+    paths-ignore:
+      - '**.md'
 
 jobs:
 

@@ -23,17 +23,15 @@ builder.Services.AddMemoryCache();
 builder.Services.AddMudServices();
 builder.Services.AddAutoMapper(typeof(Program));
 
+var backendEndpoint = builder.Configuration.GetValue<string>("BackendEndpoint");
+if (string.IsNullOrWhiteSpace(backendEndpoint))
+{
+    backendEndpoint = builder.HostEnvironment.BaseAddress;
+}
+
 builder.Services.AddGrpcClient<PersonVersionRepository.PersonVersionRepositoryClient>(options =>
 {
-    if (builder.HostEnvironment.BaseAddress.Contains("localhost"))
-    {
-        options.Address = new Uri("https://localhost:7195");
-    }
-    else
-    {
-        options.Address = new Uri(builder.HostEnvironment.BaseAddress);
-    }
-
+    options.Address = new Uri(backendEndpoint);
 })
 .ConfigurePrimaryHttpMessageHandler(
     () => new GrpcWebHandler(new HttpClientHandler()));

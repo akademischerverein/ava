@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "AV.AvA";
 
-package ava;
+package ava.api;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";

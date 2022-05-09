@@ -40,7 +40,13 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddGrpc();
 
-var jwtSecret = builder.Configuration.GetValue<string>("JwtSecret");
+var jwtSecret = builder.Configuration.GetValue<string>("JwtSecret")
+    ?? throw new InvalidOperationException("A JwtSecret needs to be configured.");
+if (jwtSecret.Length < 16)
+{
+    throw new InvalidOperationException("JwtSecret needs to be at least 16 characters long.");
+}
+
 var key = JwtKeyDerivation.DeriveKey(jwtSecret);
 builder.Services.AddAuthentication(x =>
 {
