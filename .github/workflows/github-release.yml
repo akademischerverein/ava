@@ -3,7 +3,7 @@ name: Create GitHub Release
 on:
   push:
     branches:
-      - 'release/v+.+'
+      - 'release/v**'
 
 jobs:
   build:
@@ -14,7 +14,18 @@ jobs:
           fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
       - uses: dotnet/nbgv@v0.4.0
         id: nbgv
+      - name: av-releaser-install token
+        # required to make creating a release trigger a workflow run
+        # see https://github.com/semantic-release/semantic-release/discussions/1906
+        # and https://github.com/organizations/akademischerverein/settings/apps/av-releaser
+        id: av-releaser
+        uses: getsentry/action-github-app-token@v1
+        with:
+          app_id: ${{ secrets.AV_RELEASER_APP_ID }}
+          private_key: ${{ secrets.AV_RELEASER_APP_PRIVATE_KEY }}
       - uses: softprops/action-gh-release@v1
         with:
-          tag_name: {{ steps.nbgv.outputs.SemVer2 }}
+          tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
           draft: false # could be set to true later, makes releasing less automatic though
+          prerelease: false # could be true before v1.x?
+          token: ${{ steps.av-releaser.outputs.token }} # token identity for av-releaser
