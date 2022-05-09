@@ -14,6 +14,16 @@ jobs:
           fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
       - uses: dotnet/nbgv@v0.4.0
         id: nbgv
+      - name: Create git version tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/v${{ steps.nbgv.outputs.SemVer2 }}",
+              sha: context.sha
+            })
       - name: av-releaser-install token
         # required to make creating a release trigger a workflow run
         # see https://github.com/semantic-release/semantic-release/discussions/1906
