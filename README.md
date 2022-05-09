@@ -28,4 +28,5 @@ Siehe GHCR-Pakete dieses Repos, Docker Container hosten. Siehe [Traefik](https:/
     * Es wird ein neuer Branch `release/vX.Y` erstellt. Hier ist `X.Y` als Version ohne Suffix in `version.json` gesetzt. Dabei ist X.Y entsprechend die Version *vor* Ausführung des Befehls - sprich, diese Version ist nun aus der Alpha(/Beta/...)-Phase heraus und wird veröffentlicht. Alle je veröffentlichten X.Y.z-Versionen werden aus diesem Branch veröffentlicht und korrespondieren zu einzelnen Commits dort.
     * siehe auch [NBGV Readme](https://github.com/dotnet/Nerdbank.GitVersioning) für Hintergründe zur Versionierung.
 3. Den eben automatisch erstellten `release/vX.Y` Branch pushen: `git checkout release/vX.Y && git push -u origin release/vX.Y`
-4. TODO: Nun wird per GitHub Action automatisch ein GitHub Release angelegt und zwei Docker Images erzeugt, die von [GHCR](https://ghcr.io) abgerufen werden können.
+4. Nun wird per GitHub Action automatisch ein GitHub Release angelegt und zwei Docker Images erzeugt, die von [GHCR](https://ghcr.io) abgerufen werden können.
+    * `docker pull ghcr.io/akademischerverein/ava-wasm:latest && docker pull ghcr.io/akademischerverein/ava-storagebackend:latest`
