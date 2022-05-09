@@ -16,6 +16,8 @@ jobs:
         id: nbgv
       - name: Create git version tag
         run: |
+          export GIT_COMMITTER_NAME="GitHub Actions AV Releaser"
+          export GIT_COMMITTER_EMAIL="github-actions-av-releaser@gjung.com"
           git tag -a v${{ steps.nbgv.outputs.SemVer2 }} -m "Automatically created using GitHub Actions, SemVer2 v${{ steps.nbgv.outputs.SemVer2 }}"
           git push origin v${{ steps.nbgv.outputs.SemVer2 }}
       - name: av-releaser-install token
