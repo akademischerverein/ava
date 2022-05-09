@@ -1,0 +1,49 @@
+# See https://stackoverflow.com/a/48243640/1200847
+
+# replace ava.localhost with the host name where this should live
+
+version: '3'
+services:
+  backend:
+    image: ghcr.io/akademischerverein/ava-storagebackend:latest
+    # for dev purposes, instead of image:
+    #build:
+    #  context: .
+    #  dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
+    environment:
+      - JwtSecret=xxx # use a freshly generated secret here!
+      # use docker host postgres instance
+      - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Database=ava;Username=ava_storagebackend;Include Error Detail=true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=(Host(`ava.localhost`) && PathPrefix(`/ava.api`))"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.services.backend.loadbalancer.server.scheme=h2c"
+    extra_hosts:
+      # just needed if docker host postgres is used
+      - "host.docker.internal:host-gateway"
+  wasm:
+    image: ghcr.io/akademischerverein/ava-wasm:latest
+    # for dev purposes, instead of image:
+    #build:
+    #  context: .
+    #  dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wasm.rule=Host(`ava.localhost`)"
+      - "traefik.http.routers.wasm.entrypoints=web"
+  traefik:
+    image: "traefik:v2.6"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      #- "--accesslog=true" # log requests to console
+      #- "--api.insecure=true" # enable dashboard
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      #- "8080:8080" # dashboard port
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
