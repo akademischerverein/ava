@@ -40,7 +40,8 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddGrpc();
 
-var jwtSecret = builder.Configuration.GetValue<string>("JwtSecret");
+var jwtSecret = builder.Configuration.GetValue<string>("JwtSecret")
+    ?? throw new InvalidOperationException("A JwtSecret needs to be configured.");
 var key = JwtKeyDerivation.DeriveKey(jwtSecret);
 builder.Services.AddAuthentication(x =>
 {
