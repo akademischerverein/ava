@@ -16,7 +16,7 @@ jobs:
         id: nbgv
       - name: Create git version tag
         run: |
-          git tag v${{ steps.nbgv.outputs.SemVer2 }}
+          git tag -a v${{ steps.nbgv.outputs.SemVer2 }} -m "Automatically created using GitHub Actions, SemVer2 v${{ steps.nbgv.outputs.SemVer2 }}"
           git push origin v${{ steps.nbgv.outputs.SemVer2 }}
       - name: av-releaser-install token
         # required to make creating a release trigger a workflow run
