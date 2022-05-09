@@ -16,12 +16,11 @@
 
 ## Aktuelle Version hosten
 
-> Todo
-
 Siehe `docker-compose.hosting.yml`-Datei:
 
 1. `ava.localhost` durch den richtigen Hostname ersetzen.
-2. Postgres Connection String ggf. anpassen, ggf. Postgres Container in Compose hinzufügen.
+2. Kryptografisch sicheres JwtSecret erzeugen und einfügen, mindestens 16 Zeichen lang.
+3. Postgres Connection String ggf. anpassen, ggf. Postgres Container in Compose hinzufügen.
 
 ## Neue Version releasen
 

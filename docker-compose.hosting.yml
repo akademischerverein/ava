@@ -11,7 +11,7 @@ services:
     #  context: .
     #  dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
     environment:
-      - JwtSecret=xxx # use a freshly generated secret here!
+      - JwtSecret= # use a freshly generated secret here!
       # use docker host postgres instance
       - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Database=ava;Username=ava_storagebackend;Include Error Detail=true
     labels:
