@@ -7,7 +7,10 @@ services:
       context: .
       dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
   wasm:
-    # will build ./src/AV.AvA.BlazorWasmClient/Dockerfile
     build:
       context: .
       dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
+  backup-tool:
+    build:
+      context: .
+      dockerfile: ./src/AV.AvA.BackupTool/Dockerfile
