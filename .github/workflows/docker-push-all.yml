@@ -1,0 +1,22 @@
+name: Docker Push All
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  wasm:
+    uses: ./.github/workflows/docker-build-and-push.yml
+    with:
+      dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
+      container-name-suffix: wasm
+  backend:
+    uses: ./.github/workflows/docker-build-and-push.yml
+    with:
+      dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
+      container-name-suffix: storagebackend
+  backuptool:
+    uses: ./.github/workflows/docker-build-and-push.yml
+    with:
+      dockerfile: ./src/AV.AvA.BackupTool/Dockerfile
+      container-name-suffix: backuptool
