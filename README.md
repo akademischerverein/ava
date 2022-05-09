@@ -18,7 +18,10 @@
 
 > Todo
 
-Siehe GHCR-Pakete dieses Repos, Docker Container hosten. Siehe [Traefik](https://traefik.io/).
+Siehe `docker-compose.hosting.yml`-Datei:
+
+1. `ava.localhost` durch den richtigen Hostname ersetzen.
+2. Postgres Connection String ggf. anpassen, ggf. Postgres Container in Compose hinzufügen.
 
 ## Neue Version releasen
 
