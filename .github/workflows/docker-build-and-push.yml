@@ -12,6 +12,9 @@ on:
       build-args:
         required: false
         type: string
+      push:
+        required: true
+        type: boolean
 
 env:
   REGISTRY: ghcr.io
@@ -20,9 +23,6 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
     - uses: actions/checkout@v3
       with:
@@ -42,6 +42,8 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ inputs.container-name-suffix }}
+        # type=semver extracts git tag information
+        # see https://github.com/marketplace/actions/docker-metadata-action#typesemver
         tags: |
           type=ref,event=branch
           type=semver,pattern={{version}}
@@ -54,7 +56,7 @@ jobs:
         file: ${{ inputs.dockerfile }}
         build-args: ${{ inputs.build-args }}
         builder: ${{ steps.buildx.outputs.name }}
-        push: true
+        push: ${{ inputs.push }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=local,src=/tmp/.buildx-cache
