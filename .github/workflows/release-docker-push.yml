@@ -1,12 +1,12 @@
-name: Docker CI Build
+name: Release with Docker Push
 
 on:
-  push:
-    paths-ignore:
-      - '**.md'
+  release:
+    types: [published]
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   wasm:
@@ -14,17 +14,18 @@ jobs:
     with:
       dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
       container-name-suffix: wasm
-      push: false
-      # no AOT here
+      push: true
+      build-args: |
+        AOT=true
   backend:
     uses: ./.github/workflows/docker-build-and-push.yml
     with:
       dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
       container-name-suffix: storagebackend
-      push: false
+      push: true
   backuptool:
     uses: ./.github/workflows/docker-build-and-push.yml
     with:
       dockerfile: ./src/AV.AvA.BackupTool/Dockerfile
       container-name-suffix: backuptool
-      push: false
+      push: true
