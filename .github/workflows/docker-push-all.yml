@@ -10,6 +10,8 @@ jobs:
     with:
       dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
       container-name-suffix: wasm
+      build-args: |
+        AOT=true
   backend:
     uses: ./.github/workflows/docker-build-and-push.yml
     with:

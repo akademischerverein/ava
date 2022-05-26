@@ -9,6 +9,9 @@ on:
       container-name-suffix:
         required: true
         type: string
+      build-args:
+        required: false
+        type: string
 
 env:
   REGISTRY: ghcr.io
@@ -49,6 +52,7 @@ jobs:
       with:
         context: .
         file: ${{ inputs.dockerfile }}
+        build-args: ${{ inputs.build-args }}
         builder: ${{ steps.buildx.outputs.name }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}
