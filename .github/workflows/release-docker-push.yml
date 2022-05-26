@@ -1,0 +1,32 @@
+name: Release with Docker Push
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  wasm:
+    uses: ./.github/workflows/docker-build-and-push.yml
+    with:
+      dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
+      container-name-suffix: wasm
+      push: true
+      # currently disabled as AOTing fails with CLosedXML / DocumentFormat.OpenXml.dll
+      build-args: |
+        AOT=false
+  backend:
+    uses: ./.github/workflows/docker-build-and-push.yml
+    with:
+      dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
+      container-name-suffix: storagebackend
+      push: true
+  backuptool:
+    uses: ./.github/workflows/docker-build-and-push.yml
+    with:
+      dockerfile: ./src/AV.AvA.BackupTool/Dockerfile
+      container-name-suffix: backuptool
+      push: true

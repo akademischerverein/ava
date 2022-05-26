@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <RunAOTCompilation Condition=" '$(RunAOTCompilation)' == 'true' ">true</RunAOTCompilation>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,34 @@
+name: Manual Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Project'
+        required: true
+        default: 'BlazorWasmClient'
+        type: choice
+        options:
+        - BlazorWasmClient
+        - StorageBackend
+        - BackupTool
+      build-args:
+        description: 'Build args'
+        required: true
+        default: ''
+        type: choice
+        options:
+        - ''
+        - 'AOT=true'
+
+permissions:
+  contents: read
+
+jobs:
+  docker-build:
+    uses: ./.github/workflows/docker-build-and-push.yml
+    with:
+      dockerfile: ./src/AV.AvA.${{ github.event.inputs.project }}/Dockerfile
+      container-name-suffix: ${{ github.event.inputs.tags }}-manual
+      push: false
+      build-args: ${{ github.event.inputs.build-args }}
