@@ -21,7 +21,7 @@ WORKDIR "/src/src/AV.AvA.StorageBackend"
 RUN dotnet build "AV.AvA.StorageBackend.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "AV.AvA.StorageBackend.csproj" -c Release -o /app/publish
+RUN dotnet publish "AV.AvA.StorageBackend.csproj" -c Release -o /app/publish --no-restore
 
 FROM base AS final
 WORKDIR /app
