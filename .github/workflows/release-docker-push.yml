@@ -15,9 +15,8 @@ jobs:
       dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
       container-name-suffix: wasm
       push: true
-      # currently disabled as AOTing fails with CLosedXML / DocumentFormat.OpenXml.dll
       build-args: |
-        AOT=false
+        AOT=true
   backend:
     uses: ./.github/workflows/docker-build-and-push.yml
     with:
