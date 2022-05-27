@@ -18,12 +18,12 @@ pipeline {
     }
     stage('Clean') {
         steps {
-            sh 'dotnet clean AV.AvA.sln' --no-restore
+            sh 'dotnet clean AV.AvA.sln --no-restore'
         }
     }
     stage('Build') {
         steps {
-            sh 'dotnet build -c Release AV.AvA.sln' --no-restore
+            sh 'dotnet build -c Release AV.AvA.sln --no-restore'
         }
     }
     stage('Test entityframework') {
