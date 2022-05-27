@@ -1,6 +1,6 @@
 # Assumes the build context directory is the repo root
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG AOT=
 RUN if [ -n "$AOT" ] ; then dotnet workload install wasm-tools ; fi
 WORKDIR /src
