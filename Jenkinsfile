@@ -18,12 +18,12 @@ pipeline {
     }
     stage('Clean') {
         steps {
-            sh 'dotnet clean AV.AvA.sln'
+            sh 'dotnet clean AV.AvA.sln' --no-restore
         }
     }
     stage('Build') {
         steps {
-            sh 'dotnet build -c Release AV.AvA.sln'
+            sh 'dotnet build -c Release AV.AvA.sln' --no-restore
         }
     }
     stage('Test entityframework') {
@@ -34,9 +34,10 @@ pipeline {
     }
     stage('Publish') {
         steps {
-            sh 'dotnet publish "src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj" -c Release -o publish-backend'
-            sh 'dotnet publish "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o publish-frontend'
-            sh 'dotnet publish "src/AV.AvA.BackupTool/AV.AvA.BackupTool.csproj" -c Release -o publish-tool'
+            sh 'dotnet workload install wasm-tools'
+            sh 'dotnet publish "src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj" -c Release -o publish-backend --no-restore'
+            sh 'dotnet publish "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o publish-frontend --no-restore'
+            sh 'dotnet publish "src/AV.AvA.BackupTool/AV.AvA.BackupTool.csproj" -c Release -o publish-tool --no-restore /p:RunAOTCompilation=true'
             archiveArtifacts artifacts: 'publish-backend/, publish-frontend/, publish-tool/', followSymlinks: false, onlyIfSuccessful: true
         }
     }
