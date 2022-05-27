@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   wasm:
@@ -41,4 +42,7 @@ jobs:
         keep-at-least: 2
         skip-tags: latest
         filter-tags: '*-alpha*, *-beta*'
+        # this fails because a PAT would be strictly needed here
+        # the permission packages:delete is just available for PATs
+        # see https://github.com/snok/container-retention-policy#token
         token: ${{ secrets.GITHUB_TOKEN }}
