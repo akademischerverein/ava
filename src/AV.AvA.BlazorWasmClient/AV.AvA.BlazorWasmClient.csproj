@@ -6,7 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <RunAOTCompilation Condition=" '$(RunAOTCompilation)' == 'true' ">true</RunAOTCompilation>
+    <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
+
+  <ItemGroup>
+    <TrimmableAssembly Include="ClosedXML" />
+    <TrimmableAssembly Include="DocumentFormat.OpenXml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Protobuf Include="..\Protos\ava.proto" GrpcServices="Client" />
