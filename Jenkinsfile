@@ -3,7 +3,6 @@ pipeline {
     docker {
       image 'mcr.microsoft.com/dotnet/sdk:6.0'
     }
-
   }
 
   environment {
@@ -33,6 +32,11 @@ pipeline {
         }
     }
     stage('Publish') {
+        agent {
+            docker {
+                image 'mcr.microsoft.com/dotnet/sdk:6.0'
+            }
+        }
         steps {
             sh 'dotnet workload install wasm-tools'
             sh 'dotnet publish "src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj" -c Release -o publish-backend --no-restore'
