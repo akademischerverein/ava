@@ -28,3 +28,17 @@ jobs:
       dockerfile: ./src/AV.AvA.BackupTool/Dockerfile
       container-name-suffix: backuptool
       push: false
+  apply-prerelease-container-retention-policy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: snok/container-retention-policy@v1
+      with:
+        image-names: ava-wasm, ava-storagebackend, ava-backuptool
+        cut-off: Four hours ago UTC
+        timestamp-to-use: updated_at
+        account-type: org
+        org-name: akademischerverein
+        keep-at-least: 2
+        skip-tags: latest
+        filter-tags: '*-alpha*, *-beta*'
+        token: ${{ secrets.GITHUB_TOKEN }}
