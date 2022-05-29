@@ -38,7 +38,11 @@ builder.Services.AddNpgsql<AvADbContext>(
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(o =>
+{
+    o.ResponseCompressionLevel = System.IO.Compression.CompressionLevel.Fastest;
+    o.ResponseCompressionAlgorithm = "gzip";
+});
 
 var jwtSecret = builder.Configuration.GetValue<string>("JwtSecret")
     ?? throw new InvalidOperationException("A JwtSecret needs to be configured.");
