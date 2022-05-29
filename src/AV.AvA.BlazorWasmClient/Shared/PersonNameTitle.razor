@@ -1,4 +1,4 @@
-﻿@using AV.AvA.Model
+@using AV.AvA.Model
 
 <MudGrid Spacing="0" Style="margin-top: 32px; margin-bottom: 32px;">
     <MudItem xs="9">
@@ -17,6 +17,9 @@
             @if (!string.IsNullOrWhiteSpace(Person.SuffixTitel))
             {
                 @:, @Person.SuffixTitel
+            }
+            @if (Person.Status.Any((s) => s.Typ == StatusEreignisTyp.Verstorben)) {
+                @:@(" \u2020")
             }
 
             @if (!string.IsNullOrEmpty(Person.Geburtsname))

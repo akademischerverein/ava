@@ -22,7 +22,7 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Vorname">
-            @context.Person.Vorname @context.Person.Zweitnamen
+            @((context.Person.Status.Any((s) => s.Typ == StatusEreignisTyp.Verstorben)) ? "\u2020" : "") @context.Person.Vorname @context.Person.Zweitnamen
         </MudTd>
         <MudTd DataLabel="Nachname">
             @context.Person.NachnamePraefix @context.Person.Nachname
