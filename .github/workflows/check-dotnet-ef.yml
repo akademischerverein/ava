@@ -1,0 +1,23 @@
+name: Check dotnet-ef
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+
+permissions:
+  contents: read
+
+
+jobs:
+  check-dotnet-ef:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+    - name: Run dotnet-ef
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet ef dbcontext info --startup-project src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj --project src/AV.AvA.Data/AV.AvA.Data.csproj
+        dotnet ef migrations list --no-connect --no-build --startup-project src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj --project src/AV.AvA.Data/AV.AvA.Data.csproj
