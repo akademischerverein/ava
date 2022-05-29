@@ -1,4 +1,5 @@
-@page "/Details/{AvId:int}"
+﻿@page "/Details/{AvId:int}"
+@page "/Details/{AvId:int}/{PersonVersionId:int}"
 @using AV.AvA.BlazorWasmClient.Services
 @using AV.AvA.Model
 @layout AuthedLayout
@@ -6,7 +7,7 @@
 
 @if (_pv != null)
 {
-    <PersonDetail PersonVersion="_pv" Beziehungen="_beziehungen"/>
+    <PersonDetail PersonVersion="_pv" Beziehungen="_beziehungen" />
 }
 else
 {
@@ -15,23 +16,34 @@ else
 
 @code {
     [Parameter]
-	public int AvId { get; set; }
+    public int AvId { get; set; }
 
-	private PersonVersion? _pv;
+    [Parameter]
+    public int? PersonVersionId { get; set; }
+
+    private PersonVersion? _pv;
     private Dictionary<int, PersonVersion?> _beziehungen = new();
 
-	protected override async Task OnParametersSetAsync()
-	{
-        _pv = await pva.GetCurrentByAvIdAsync(AvId);
+    protected override async Task OnParametersSetAsync()
+    {
+        if (PersonVersionId.HasValue)
+        {
+            var versions = await pva.GetAllByAvIdAsync(AvId);
+            _pv = versions.First(pv => pv.PersonVersionId == PersonVersionId.Value);
+        }
+        else
+        {
+            _pv = await pva.GetCurrentByAvIdAsync(AvId);
+        }
 
-	    _beziehungen = new Dictionary<int, PersonVersion?>();
-	    foreach (var bez in _pv.Person.Beziehungen)
-	    {
-	        if (bez.AvId.HasValue && !_beziehungen.ContainsKey(bez.AvId.Value))
-	        {
-	            _beziehungen[bez.AvId.Value] = await pva.GetCurrentByAvIdAsync(bez.AvId.Value);
-	        }
-	    }
+        _beziehungen = new Dictionary<int, PersonVersion?>();
+        foreach (var bez in _pv.Person.Beziehungen)
+        {
+            if (bez.AvId.HasValue && !_beziehungen.ContainsKey(bez.AvId.Value))
+            {
+                _beziehungen[bez.AvId.Value] = await pva.GetCurrentByAvIdAsync(bez.AvId.Value);
+            }
+        }
     }
 
 }

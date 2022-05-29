@@ -1,4 +1,4 @@
-@using AV.AvA.Model
+﻿@using AV.AvA.Model
 @using System.Globalization
 @using System.Text.Json
 @using System.Text.Encodings.Web
@@ -185,7 +185,7 @@
                             @:@beziehung.Vorname @beziehung.Nachname
                         }
                         <MudText Typo="Typo.caption">
-                            <GueltigVonBis GueltigVon="@beziehung.GueltigVon" GueltigBis="@beziehung.GueltigBis"/>
+                            <GueltigVonBis GueltigVon="@beziehung.GueltigVon" GueltigBis="@beziehung.GueltigBis" />
                         </MudText>
                     </MudListItem>
                 }
@@ -230,7 +230,7 @@
                 {
                     <MudListItem>
                         <MudText Typo="Typo.caption">
-                            <GueltigVonBis GueltigVon="@arbeitgeber.GueltigVon" GueltigBis="@arbeitgeber.GueltigBis" AddLinebreak="true"/>
+                            <GueltigVonBis GueltigVon="@arbeitgeber.GueltigVon" GueltigBis="@arbeitgeber.GueltigBis" AddLinebreak="true" />
                         </MudText>
                         @if (!string.IsNullOrEmpty(@arbeitgeber.Position))
                         {
@@ -253,7 +253,9 @@
                         }
                         @if (!string.IsNullOrEmpty(arbeitgeber.Adresse.Telefon))
                         {
-                            <br />@:Tel:
+                            <br />
+
+                            @:Tel:
                             <a href="tel:@arbeitgeber.Adresse.Telefon">@arbeitgeber.Adresse.Telefon</a>
                         }
                     </MudListItem>
@@ -264,38 +266,41 @@
 }
 
 <MudExpansionPanels Class="ma-8">
-    <MudExpansionPanel Text="Frühere Versionen" IsExpandedChanged="LoadHistory">
-        <MudSimpleTable Style="overflow-x: auto;">
-            <thead>
-            <tr>
-                <th>Änderungsdatum</th>
-                <th>Änderungsgrund</th>
-                <th>Von</th>
-                <th>Aktionen</th>
-            </tr>
-            </thead>
-            <tbody>
-                @foreach (var oldVer in _oldVersions.OrderBy((pv) => pv.CommittedAt))
-                {
-                    var detailsHistory = $"/HistoryDetails/{oldVer.PersonVersionId}";
+    <MudExpansionPanel @ref="_historyPanel" Text="Frühere Versionen" IsExpandedChanged="History_ExpandedChanged">
+        @if (_oldVersions != null)
+        {
+            <MudSimpleTable Style="overflow-x: auto;">
+                <thead>
                     <tr>
-                    <td>@oldVer.CommittedAt</td>
-                    <td>@oldVer.CommitMessage</td>
-                    @if (oldVer.ComitterAvId.HasValue)
-                    {
-                        <td>@Beziehungen[oldVer.ComitterAvId.Value].Person.Vorname @Beziehungen[oldVer.ComitterAvId.Value].Person.Nachname</td>
-                    }
-                    else
-                    {
-                        <td>System</td>
-                    }
-                        <td>
-                            <MudIconButton Href="@detailsHistory" Icon="@Icons.Filled.ReadMore" Edge="Edge.End" Size="Size.Small" Class="mx-3"/>
-                        </td>
+                        <th>Änderungsdatum</th>
+                        <th>Änderungsgrund</th>
+                        <th>Von</th>
+                        <th>Aktionen</th>
                     </tr>
-                }
-            </tbody>
-        </MudSimpleTable>
+                </thead>
+                <tbody>
+                    @foreach (var oldVer in _oldVersions.OrderBy((pv) => pv.CommittedAt))
+                    {
+                        var detailsHistory = $"/Details/{oldVer.AvId}/{oldVer.PersonVersionId}";
+                        <tr>
+                            <td>@oldVer.CommittedAt</td>
+                            <td>@oldVer.CommitMessage</td>
+                            @if (oldVer.ComitterAvId.HasValue)
+                            {
+                                <td>@Beziehungen[oldVer.ComitterAvId.Value].Person.Vorname @Beziehungen[oldVer.ComitterAvId.Value].Person.Nachname</td>
+                            }
+                            else
+                            {
+                                <td>System</td>
+                            }
+                            <td>
+                                <MudIconButton Href="@detailsHistory" Icon="@Icons.Filled.ReadMore" Edge="Edge.End" Size="Size.Small" Class="mx-3" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        }
     </MudExpansionPanel>
 </MudExpansionPanels>
 
@@ -314,24 +319,33 @@
     [Parameter]
     public Dictionary<int, PersonVersion> Beziehungen { get; set; } = null!;
 
-    private IReadOnlyCollection<PersonVersion> _oldVersions = new List<PersonVersion>();
+    private MudExpansionPanel? _historyPanel { get; set; }
+
+    private IReadOnlyCollection<PersonVersion>? _oldVersions;
 
     private JsonSerializerOptions JsonPrettyOpts => new(_jsonOpts)
-    {
-        WriteIndented = true,
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-    };
+        {
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        };
 
     private Func<StatusEreignis, object?> SortStatusDatum = s => s.EingetretenAm?.ToInstant();
 
-    private async Task LoadHistory(bool newVal)
+    protected override void OnParametersSet()
     {
-        if (!newVal)
+        base.OnParametersSet();
+        _oldVersions = null;
+        _historyPanel?.Collapse();
+    }
+
+    private async Task History_ExpandedChanged(bool newVal)
+    {
+        if (!newVal || _oldVersions != null)
         {
             return;
         }
-        _oldVersions = await pva.GetAllByAvIdAsync(PersonVersion.AvId);
 
+        _oldVersions = await pva.GetAllByAvIdAsync(PersonVersion.AvId);
         foreach (var oldPv in _oldVersions)
         {
             if (oldPv.ComitterAvId.HasValue && !Beziehungen.ContainsKey(oldPv.ComitterAvId.Value))
