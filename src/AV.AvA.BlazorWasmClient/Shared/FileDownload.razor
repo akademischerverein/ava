@@ -6,12 +6,12 @@
     public Func<Task<Stream>>? StreamFactory { get; set; }
 
     [Parameter]
-    public string? FileName { get; set; }
+    public Func<string>? FileNameFactory { get; set; }
 
     public async Task TriggerDownloadAsync()
     {
         using var fileStream = await (StreamFactory ?? throw new InvalidOperationException($"{nameof(StreamFactory)} not set."))();
-        var fileName = FileName ?? throw new InvalidOperationException($"{nameof(FileName)} not set.");
+        var fileName = (FileNameFactory ?? throw new InvalidOperationException($"{nameof(FileNameFactory)} not set."))();
 
         using var streamRef = new DotNetStreamReference(stream: fileStream);
 

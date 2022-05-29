@@ -1,5 +1,6 @@
 ﻿@using AV.AvA.BlazorWasmClient.Models
 @using AV.AvA.BlazorWasmClient.Services
+@using AV.AvA.Model
 @using AutoMapper
 @using ClosedXML.Excel
 @using NodaTime
@@ -8,33 +9,42 @@
 @inject IClock clock
 
 <div class="ma-8">
-    <FileDownload @ref="currentRecordDownload" FileName="AvaExport.xlsx" StreamFactory="GetCurrentRecordsXlsxStream" />
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerCurrentRecordDownload">
+    <FileDownload @ref="currentRecordDownload" FileNameFactory="@(() => $"AvaExportList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.xlsx")" StreamFactory="GetCurrentRecordsXlsxStream" />
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerCurrentRecordDownload" Class="mb-4">
         Aktuellen Stand exportieren
     </MudButton>
-    <br>
+    <br />
 
-    <FileDownload @ref="emailListDownload" FileName="AvaEmailList.xlsx" StreamFactory="GetEmailListXlsxStream" />
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerEmailListDownload" Class="my-4">
+    <FileDownload @ref="emailListDownload" FileNameFactory="@(() => $"AvaEmailList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.xlsx")" StreamFactory="GetEmailListXlsxStream" />
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerEmailListDownload" Class="mb-4">
         E-Mail-Liste exportieren
+    </MudButton>
+    <br />
+
+    <FileDownload @ref="birthdayListDownload" FileNameFactory="@(() => $"AvaBirthdayList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.xlsx")" StreamFactory="GetBirthdayListXlsxStream" />
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerBirthdayListDownload" Class="mb-4">
+        Geburtstagsliste exportieren
     </MudButton>
 </div>
 
 @code {
-    FileDownload currentRecordDownload;
-    FileDownload emailListDownload;
+    private FileDownload? currentRecordDownload;
+    private FileDownload? emailListDownload;
+    private FileDownload? birthdayListDownload;
 
-    private Task TriggerCurrentRecordDownload() => currentRecordDownload.TriggerDownloadAsync();
+    private Task TriggerCurrentRecordDownload() => currentRecordDownload!.TriggerDownloadAsync();
 
-    private Task TriggerEmailListDownload() => emailListDownload.TriggerDownloadAsync();
+    private Task TriggerEmailListDownload() => emailListDownload!.TriggerDownloadAsync();
 
-    private Stream GetXlsxStream<T>(IEnumerable<T> data)
+    private Task TriggerBirthdayListDownload() => birthdayListDownload!.TriggerDownloadAsync();
+
+    private Stream GetXlsxStream<T>(IEnumerable<T> data, string worksheetName)
     {
         // this is a factory, don't dispose
         var ms = new MemoryStream();
         using var workbook = new XLWorkbook();
 
-        var worksheet = workbook.Worksheets.Add("AVA Export");
+        var worksheet = workbook.Worksheets.Add(worksheetName);
         worksheet.Cell(1, 1).InsertTable(data);
 
         workbook.SaveAs(ms);
@@ -42,14 +52,18 @@
         return ms;
     }
 
-    private async Task<Stream> GetXlsxStream<T>()
+    private async Task<Stream> GetXlsxStream<T>(
+        string worksheetName = "AvA Export",
+        Func<IReadOnlyCollection<PersonVersion>, IEnumerable<PersonVersion>>? transform = null)
     {
         var recs = await pva.GetCurrentAsync();
-        var xlsxModels = recs.Select(r => mapper.Map<T>(r));
-        return GetXlsxStream(xlsxModels);
+        IEnumerable<PersonVersion> pvs = transform == null ? recs : transform(recs);
+        var xlsxModels = pvs.Select(r => mapper.Map<T>(r));
+        return GetXlsxStream(xlsxModels, worksheetName);
     }
 
-    private Task<Stream> GetCurrentRecordsXlsxStream() => GetXlsxStream<DefaultXlsxExportModel>();
+    private Task<Stream> GetCurrentRecordsXlsxStream()
+        => GetXlsxStream<DefaultXlsxExportModel>($"AvA Export {DateTime.Now:yyyy-MM-dd}");
 
     private async Task<Stream> GetEmailListXlsxStream()
     {
@@ -60,6 +74,10 @@
             (x.e.GueltigVon?.ToInstant() ?? Instant.MinValue) <= now &&
             (x.e.GueltigBis?.ToInstant() ?? Instant.MaxValue) >= now);
         var xlsxModels = valid.Select(r => mapper.Map<XlsxEmailExportModel>(r));
-        return GetXlsxStream(xlsxModels);
+        return GetXlsxStream(xlsxModels, $"AvA E-Mail Export {DateTime.Now:yyyy-MM-dd}");
     }
+
+    private Task<Stream> GetBirthdayListXlsxStream() => GetXlsxStream<XlsxBirthdayListExportModel>(
+        $"AvA Geburtstage {DateTime.Now:yyyy-MM-dd}",
+        pvs => pvs.OrderBy(pv => pv.Person.Geburtsdatum));
 }

@@ -42,6 +42,11 @@ namespace AV.AvA.BlazorWasmClient
                     opt => opt.MapFrom((src, dest) => src.E.Typ));
 
             CreateMap<Model.Person, Models.XlsxEmailExportModel>();
+
+            CreateMap<Model.PersonVersion, Models.XlsxBirthdayListExportModel>()
+                .AfterMap((src, dest, ctx) => ctx.Mapper.Map(src.Person, dest));
+
+            CreateMap<Model.Person, Models.XlsxBirthdayListExportModel>();
         }
     }
 }
