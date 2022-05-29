@@ -1,4 +1,4 @@
-﻿@using AV.AvA.Model
+@using AV.AvA.Model
 @using System.Globalization
 @using System.Text.Json
 @using System.Text.Encodings.Web
@@ -73,9 +73,9 @@
             }
 
             @{
-                StatusEreignis StatusOMAvEv = PersonVersion.Person.Status.Find((s) => (s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedAVeV || s.Typ == StatusEreignisTyp.Uebertritt));
-                StatusEreignis StatusOMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedHG);
-                StatusEreignis StatusOMHGStimmR = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.StimmrechtHGErhalten);
+                var StatusOMAvEv = PersonVersion.Person.Status.Find((s) => (s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedAVeV || s.Typ == StatusEreignisTyp.Uebertritt));
+                var StatusOMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedHG);
+                var StatusOMHGStimmR = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.StimmrechtHGErhalten);
             }
 
             @if (StatusOMAvEv != null)
@@ -95,8 +95,8 @@
             }
             @if ((StatusOMAvEv == null) && (StatusOMHG == null))
             {
-                StatusEreignis StatusSMAVeV = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedAVeV);
-                StatusEreignis StatusSMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedHG);
+                var StatusSMAVeV = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedAVeV);
+                var StatusSMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedHG);
                 @if (StatusSMAVeV != null)
                 {
                     <PersonStatusListItem Ereignis=@StatusSMAVeV Verein="Akademischer Verein Darmstadt e.V." Zustand="studentisches Mitglied" />
@@ -106,9 +106,9 @@
                     <PersonStatusListItem Ereignis=@StatusSMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="studentisches Mitglied" />
                 }
 
-                StatusEreignis StatusVoMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VollmitgliedAufgenommen);
-                StatusEreignis StatusJuMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.JungmitgliedEingesungen);
-                StatusEreignis StatusVerk = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VerkehrsgastAufgenommen);
+                var StatusVoMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VollmitgliedAufgenommen);
+                var StatusJuMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.JungmitgliedEingesungen);
+                var StatusVerk = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VerkehrsgastAufgenommen);
 
                 @if (StatusVoMi != null)
                 {
@@ -309,10 +309,10 @@
 
 @code {
     [Parameter]
-    public PersonVersion PersonVersion { get; set; }
+    public PersonVersion PersonVersion { get; set; } = null!;
 
     [Parameter]
-    public Dictionary<int, PersonVersion?> Beziehungen { get; set; }
+    public Dictionary<int, PersonVersion> Beziehungen { get; set; } = null!;
 
     private IReadOnlyCollection<PersonVersion> _oldVersions = new List<PersonVersion>();
 
@@ -322,7 +322,7 @@
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    private Func<StatusEreignis, object> SortStatusDatum = s => s.EingetretenAm?.ToInstant();
+    private Func<StatusEreignis, object?> SortStatusDatum = s => s.EingetretenAm?.ToInstant();
 
     private async Task LoadHistory(bool newVal)
     {

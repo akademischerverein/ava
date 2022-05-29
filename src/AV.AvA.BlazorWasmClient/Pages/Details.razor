@@ -1,4 +1,4 @@
-﻿@page "/Details/{AvId:int}"
+@page "/Details/{AvId:int}"
 @using AV.AvA.BlazorWasmClient.Services
 @using AV.AvA.Model
 @layout AuthedLayout
@@ -18,7 +18,7 @@ else
 	public int AvId { get; set; }
 
 	private PersonVersion? _pv;
-    private Dictionary<int, PersonVersion?> _beziehungen;
+    private Dictionary<int, PersonVersion?> _beziehungen = new();
 
 	protected override async Task OnParametersSetAsync()
 	{
