@@ -1,0 +1,32 @@
+﻿@page "/Geburtstage"
+@using AV.AvA.BlazorWasmClient.Services
+@using AV.AvA.BlazorWasmClient.Utilities
+@using AV.AvA.Model
+@layout AuthedLayout
+@inject IPersonVersionAccessor pva
+
+@if (_persons != null) {
+    <PersonBirthdayList PersonVersions="_persons" style="height: calc(100vh - var(--mud-appbar-height) - 32px)" />
+}
+
+@code {
+    private ICollection<PersonVersion> _persons = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _persons = (await pva.GetCurrentAsync())
+            .Where(Filter)
+            .OrderBy(pv => pv.Person.Geburtsdatum, new UpcomingBirthdayComparer())
+            .ToList();
+    }
+
+    private bool Filter(PersonVersion pv)
+    {
+        var s = pv.Person.Status;
+        var idx = s.FindIndex(x => x.Typ == StatusEreignisTyp.Verstorben ||
+                       x.Typ == StatusEreignisTyp.AusscheidenAktivitas ||
+                       x.Typ == StatusEreignisTyp.AusscheidenAVeV ||
+                       x.Typ == StatusEreignisTyp.AusscheidenHG);
+        return idx < 0;
+    }
+}

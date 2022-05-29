@@ -1,0 +1,60 @@
+﻿@using AV.AvA.Model
+@using NodaTime;
+@using NodaTime.Extensions;
+@inject IClock clock;
+
+<MudSimpleTable @attributes="UserAttributes" Hover="true" Striped="true" Class="ma-4 table-layout-fixed" FixedHeader="true">
+    <thead>
+        <tr>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Geburtsdatum</th>
+            <th scope="col" style="width: 5em;">Alter</th>
+            <th>Neues Alter in @_referenceDate.Year</th>
+            <th scope="col" style="width: 5em;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <Virtualize Items="PersonVersions">
+            <tr>
+                <td>@context.Person.Vorname @context.Person.Zweitnamen</td>
+                <td>@context.Person.NachnamePraefix @context.Person.Nachname</td>
+                <td>@context.Person.Geburtsdatum</td>
+                <td>@(context.Person.Geburtsdatum?.Minus(_referenceDate).Years * -1)</td>
+                <td>@(context.Person.Geburtsdatum?.PlusYears(_referenceDate.Year * -1).Year * -1)</td>
+                <td><MudIconButton Href=@DetailUrl(context) Icon="@Icons.Filled.ReadMore" Edge="Edge.Start" Size="Size.Small" Class="mx-3" /></td>
+            </tr>
+        </Virtualize>
+    </tbody>
+</MudSimpleTable>
+
+@code {
+    [Parameter]
+    public ICollection<PersonVersion>? PersonVersions { get; set; }
+
+    /// <summary>
+    /// UserAttributes carries all attributes you add to the component that don't match any of its parameters.
+    /// They will be splatted onto the underlying HTML tag.
+    /// </summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> UserAttributes { get; set; } = new Dictionary<string, object>();
+
+    private LocalDate _referenceDate;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _referenceDate = clock.InBclSystemDefaultZone().GetCurrentDate();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine($"{nameof(OnAfterRender)} called on PersonBirthdayList");
+        base.OnAfterRender(firstRender);
+    }
+
+    private string DetailUrl(PersonVersion pv)
+    {
+        return $"/Details/{pv.AvId}";
+    }
+}
