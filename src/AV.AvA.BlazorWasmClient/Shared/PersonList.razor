@@ -1,4 +1,4 @@
-﻿@using AV.AvA.Model
+@using AV.AvA.Model
 
 <MudTable Virtualize="@true" Height="calc(100vh - var(--mud-appbar-height) - 32px - 64px)" Items="@PersonVersions" Hover="true" Striped="true" Filter="FilterFunc" SortLabel="Sortieren" Class="ma-4 table-layout-fixed" FixedHeader="true">
     <ToolBarContent>
@@ -64,8 +64,6 @@
 
     private bool FilterFunc(PersonVersion pv)
     {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
         if (!showVerstorben && pv.Person.Status.Any((s) => s.Typ == StatusEreignisTyp.Verstorben))
             return false;
         if (!showAusgetreten && pv.Person.Status.Any((s) => s.Typ == StatusEreignisTyp.AusscheidenAktivitas))
@@ -74,6 +72,8 @@
             return false;
         if (!showAusgetreten && pv.Person.Status.Any((s) => s.Typ == StatusEreignisTyp.AusscheidenHG))
             return false;
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
         return searchString
             .Split(" ")
             .All((s) =>
