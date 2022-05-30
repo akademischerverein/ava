@@ -17,7 +17,7 @@ namespace AV.AvA.BlazorWasmClient.Models
         public string? Zweitnamen { get; set; }
 
         /// <summary>
-        /// List<string> in Person.
+        /// <see cref="List{T}" /> of <see cref="string" /> in <see cref="AV.AvA.Model.Person" />.
         /// </summary>
         public string? Spitznamen { get; set; }
 
