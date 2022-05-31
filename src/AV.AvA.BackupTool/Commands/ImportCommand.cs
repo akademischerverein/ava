@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AV.AvA.Data;
 using AV.AvA.Model;
 using McMaster.Extensions.CommandLineUtils;
+using Microsoft.EntityFrameworkCore;
 
 namespace AV.AvA.BackupTool.Commands
 {
@@ -27,10 +28,21 @@ namespace AV.AvA.BackupTool.Commands
         [Required]
         public string JsonBackupPath { get; set; } = default!;
 
+        [Option(
+            Description = "Atomically replace person versions instead of appending them",
+            ShortName = "r")]
+        public bool ReplacePersonVersions { get; set; }
+
         protected override async Task<int> OnExecute(CommandLineApplication app)
         {
             using var fs = new FileStream(JsonBackupPath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var tran = await _db.Database.BeginTransactionAsync();
+
+            if (ReplacePersonVersions)
+            {
+                await _db.Database.ExecuteSqlRawAsync("TRUNCATE TABLE person_versions RESTART IDENTITY;");
+            }
+
             await foreach (var pv in JsonSerializer.DeserializeAsyncEnumerable<PersonVersion>(fs, _jsonOpts))
             {
                 _ = pv ?? throw new InvalidOperationException("Deserialization yielded a null PersonVersion");
