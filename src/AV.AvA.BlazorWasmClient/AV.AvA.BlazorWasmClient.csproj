@@ -29,7 +29,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.7" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
     <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
-    <PackageReference Include="MudBlazor" Version="6.0.12" />
+    <PackageReference Include="MudBlazor" Version="6.0.14" />
     <PackageReference Include="System.Interactive.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
