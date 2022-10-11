@@ -25,7 +25,7 @@ public enum StatusEreignisTyp
     [Display(Name = "Beurlaubt")]
     Beurlaubt,
 
-    [Display(Name = "Übertritt")]
+    [Display(Name = "Ãœbertritt in ADAHschaft")]
     Uebertritt,
 
     [Display(Name = "Ex-Aktiv")]
@@ -43,10 +43,10 @@ public enum StatusEreignisTyp
     [Display(Name = "Ord. Mitglied AV e.V.: Eintritt")]
     EintrittOrdentlichesMitgliedAVeV,
 
-    [Display(Name = "Förd. Mitglied HG: Eintritt")]
+    [Display(Name = "FÃ¶rd. Mitglied HG: Eintritt")]
     EintrittFoerderndesMitgliedHG,
 
-    [Display(Name = "Förd. Mitglied AV e.V.: Eintritt")]
+    [Display(Name = "FÃ¶rd. Mitglied AV e.V.: Eintritt")]
     EintrittFoerderndesMitgliedAVeV,
 
     [Display(Name = "Stimmrecht HG erhalten")]
