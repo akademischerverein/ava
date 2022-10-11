@@ -176,9 +176,9 @@
                         @if (beziehung.AvId.HasValue && Beziehungen.ContainsKey(beziehung.AvId.Value))
                         {
                             var detailHref = $"/Details/{beziehung.AvId.Value}";
-                            <MudButton Href="@detailHref" Variant="Variant.Text" Color="Color.Primary" Size="Size.Medium">
+                            <MudLink Href="@detailHref">
                                 @Beziehungen[beziehung.AvId.Value].Person.Vorname @Beziehungen[beziehung.AvId.Value].Person.Nachname
-                            </MudButton>
+                            </MudLink>
                         }
                         else
                         {
