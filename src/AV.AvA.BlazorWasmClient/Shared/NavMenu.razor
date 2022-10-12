@@ -1,5 +1,15 @@
-﻿<MudNavMenu Bordered="true" Color="Color.Primary">
+﻿@using System.Reflection;
+
+<MudNavMenu Bordered="true" Color="Color.Primary" Style="height:100%">
+    <h3 style="margin:1em;">Hallo Benutzer!</h3>
     <MudNavLink Icon="@Icons.Filled.People" Href="/" Match="NavLinkMatch.All">Alle Personen</MudNavLink>
     <MudNavLink Icon="@Icons.Custom.FileFormats.FileExcel" Href="/XlsxExport">Excel Export</MudNavLink>
     <MudNavLink Icon="@Icons.Filled.Cake" Href="/Geburtstage">Geburtstage</MudNavLink>
+    <p style="margin:1em;position:absolute;bottom:0px;font-size:80%">Version @Version</p>
 </MudNavMenu>
+
+
+@code {
+    [Parameter]
+    public string Version { get; set; } = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+}
