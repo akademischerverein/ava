@@ -18,6 +18,10 @@ jobs:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
     - name: Run dotnet-ef
       run: |
+        curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 7.0 --quality preview
+        export DOTNET_ROOT=$HOME/.dotnet
+        export PATH=$DOTNET_ROOT:$PATH
+        export PATH=$DOTNET_ROOT/tools:$PATH
         dotnet tool install --global dotnet-ef --prerelease
-        dotnet ef dbcontext info --startup-project src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj --project src/AV.AvA.Data/AV.AvA.Data.csproj --prerelease
-        dotnet ef migrations list --no-connect --no-build --startup-project src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj --project src/AV.AvA.Data/AV.AvA.Data.csproj --prerelease
+        dotnet ef dbcontext info --startup-project src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj --project src/AV.AvA.Data/AV.AvA.Data.csproj
+        dotnet ef migrations list --no-connect --no-build --startup-project src/AV.AvA.StorageBackend/AV.AvA.StorageBackend.csproj --project src/AV.AvA.Data/AV.AvA.Data.csproj
