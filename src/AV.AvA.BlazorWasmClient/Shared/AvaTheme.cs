@@ -10,7 +10,8 @@ namespace AV.AvA.BlazorWasmClient.Shared
             {
                 Primary = Colors.Blue.Darken2,
                 Secondary = Colors.Grey.Darken1,
-                AppbarBackground = Colors.Red.Darken2,
+                AppbarBackground = Colors.Shades.White,
+                AppbarText = Colors.Shades.Black,
             },
         };
 

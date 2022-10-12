@@ -4,11 +4,11 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
+<MudLayout Class="navbar-underlined">
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudIconButton Icon="@AvaTheme.AvLogo" Color="Color.Inherit" Class="pa-3" Style="background: var(--mud-palette-white, #FFFFFF)"/>
-        <MudText Style="margin-left: 12px"><strong>AV&thinsp;&ndash;&thinsp;Adressverwaltung</strong></MudText>
+        <MudIconButton Icon="@AvaTheme.AvLogo" Color="Color.Inherit" Class="pa-1"/>
+        <MudText Class="app-name">AV&thinsp;&ndash;&thinsp;Adressverwaltung</MudText>
         <MudSpacer />
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always">
