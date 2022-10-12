@@ -1,6 +1,6 @@
 # Assumes the build context directory is the repo root
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["AV.AvA.sln", "./"]
 COPY ["Directory.Build.props", "./"]
@@ -17,7 +17,7 @@ RUN dotnet build "AV.AvA.BackupTool.csproj" -c Release -o /app/build --no-restor
 FROM build AS publish
 RUN dotnet publish "AV.AvA.BackupTool.csproj" -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0 AS final
+FROM mcr.microsoft.com/dotnet/runtime:7.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "AV.AvA.BackupTool.dll"]
