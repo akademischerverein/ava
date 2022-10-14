@@ -30,8 +30,9 @@ Siehe `docker-compose.hosting.yml`-Datei:
     * Die Datei `version.json` im master Branch wird in der Minor-Komponente inkrementiert, `-alpha` als Suffix gesetzt.
     * Es wird ein neuer Branch `release/vX.Y` erstellt. Hier ist `X.Y` als Version ohne Suffix in `version.json` gesetzt. Dabei ist X.Y entsprechend die Version *vor* Ausführung des Befehls - sprich, diese Version ist nun aus der Alpha(/Beta/...)-Phase heraus und wird veröffentlicht. Alle je veröffentlichten X.Y.z-Versionen werden aus diesem Branch veröffentlicht und korrespondieren zu einzelnen Commits dort.
     * siehe auch [NBGV Readme](https://github.com/dotnet/Nerdbank.GitVersioning) für Hintergründe zur Versionierung.
-4. Den eben automatisch erstellten `release/vX.Y` Branch pushen: `git checkout release/vX.Y && git push -u origin release/vX.Y`
-5. Nun wird per GitHub Action automatisch ein GitHub Release angelegt und zwei Docker Images erzeugt, die von [GHCR](https://ghcr.io) abgerufen werden können.
+4. `git push`. Den `master`-Branch pushen - wir haben ihn oben bereits ausgecheckt. Hier wurde die Version inkrementiert, sodass auf `master` nun an der nächsten kommenden Version gearbeitet wird.
+5. Den eben automatisch erstellten `release/vX.Y` Branch pushen: `git checkout release/vX.Y && git push -u origin release/vX.Y`
+6. Nun wird per GitHub Action automatisch ein GitHub Release angelegt und zwei Docker Images erzeugt, die von [GHCR](https://ghcr.io) abgerufen werden können.
     * `docker pull ghcr.io/akademischerverein/ava-wasm:latest && docker pull ghcr.io/akademischerverein/ava-storagebackend:latest`
 
 ## Branches / Aufbau des Repos
