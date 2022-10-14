@@ -43,10 +43,15 @@
                 </MudListItem>
             }
             <MessengerList Messengers="@PersonVersion.Person.Messenger" />
-            @if (!string.IsNullOrEmpty(PersonVersion.Person.Webseite))
+            @if (!string.IsNullOrWhiteSpace(PersonVersion.Person.Webseite))
             {
+                var websiteUrl = PersonVersion.Person.Webseite;
+                if (!websiteUrl.StartsWith("http"))
+                {
+                    websiteUrl = $"http://{websiteUrl}";
+                }
                 <MudListItem Icon="@Icons.Material.Filled.Web">
-                    <a href="@PersonVersion.Person.Webseite" target="_blank" rel="noopener noreferrer">@PersonVersion.Person.Webseite</a>
+                    <a href="@websiteUrl" target="_blank" rel="noopener noreferrer">@PersonVersion.Person.Webseite</a>
                 </MudListItem>
             }
         </MudList>
