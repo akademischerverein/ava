@@ -1,7 +1,12 @@
 ﻿@using AV.AvA.Model
+@using System.Globalization
 @using NodaTime;
 @using NodaTime.Extensions;
 @inject IClock clock;
+
+@{
+    var deDe = new CultureInfo("de-DE");
+}
 
 <MudSimpleTable @attributes="UserAttributes" Hover="true" Striped="true" Class="ma-4 table-layout-fixed" FixedHeader="true">
     <thead>
@@ -19,7 +24,7 @@
             <tr>
                 <td>@context.Person.Vorname @context.Person.Zweitnamen</td>
                 <td>@context.Person.NachnamePraefix @context.Person.Nachname</td>
-                <td>@context.Person.Geburtsdatum</td>
+                <td>@context.Person.Geburtsdatum?.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)</td>
                 <td>@(context.Person.Geburtsdatum?.Minus(_referenceDate).Years * -1)</td>
                 <td>@(context.Person.Geburtsdatum?.PlusYears(_referenceDate.Year * -1).Year * -1)</td>
                 <td><MudIconButton Href=@DetailUrl(context) Icon="@Icons.Filled.ReadMore" Edge="Edge.Start" Size="Size.Small" Class="mx-3" /></td>
