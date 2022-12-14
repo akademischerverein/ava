@@ -24,7 +24,7 @@ jobs:
         id: check1
         uses: georg-jung/docker-image-update-checker@main
         with:
-          base-image: fholzer/nginx-brotli:latest
+          base-image: ghcr.io/georg-jung/nginx-brotli:latest
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-wasm:latest
           github_token: ${{ secrets.GITHUB_TOKEN }}
           verbose: true
