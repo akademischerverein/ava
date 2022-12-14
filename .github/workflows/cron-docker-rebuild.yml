@@ -17,7 +17,7 @@ jobs:
       contents: read
       packages: read
     outputs:
-      image-needs-updating: ${{ steps.check1.outputs.needs-updating || steps.check2.outputs.needs-updating || steps.check3.outputs.needs-updating }}
+      image-needs-updating: ${{ steps.check1.outputs.needs-updating == 'true' || steps.check2.outputs.needs-updating == 'true' || steps.check3.outputs.needs-updating == 'true' }}
       build-ref: ${{ steps.latestrelease.outputs.releasetag }}
     steps:
       - name: "Docker Image Update Checker: BlazorWasmClient"
@@ -49,14 +49,14 @@ jobs:
         run: |
           echo "releasetag=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s ${{ github.api_url }}/repos/${{ github.repository }}/releases/latest | jq '.tag_name' | sed 's/\"//g')" \
              >> $GITHUB_OUTPUT
-        if: steps.check1.outputs.needs-updating || steps.check2.outputs.needs-updating || steps.check3.outputs.needs-updating
+        if: steps.check1.outputs.needs-updating == 'true' || steps.check2.outputs.needs-updating == 'true' || steps.check3.outputs.needs-updating == 'true'
       - name: echo release tag
         run: |
           echo ${{ steps.latestrelease.outputs.releasetag }}
-        if: steps.check1.outputs.needs-updating || steps.check2.outputs.needs-updating || steps.check3.outputs.needs-updating
+        if: steps.check1.outputs.needs-updating == 'true' || steps.check2.outputs.needs-updating == 'true' || steps.check3.outputs.needs-updating == 'true'
   call_rebuild:
     needs: check_base_image_updated
-    if: ${{ needs.check_base_image_updated.outputs.image-needs-updating }}
+    if: ${{ needs.check_base_image_updated.outputs.image-needs-updating == 'true' }}
     uses: ./.github/workflows/release-docker-push.yml
     with:
       build-ref: ${{ needs.check_base_image_updated.outputs.build-ref }}
