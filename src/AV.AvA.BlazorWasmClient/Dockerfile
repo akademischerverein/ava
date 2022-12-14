@@ -16,7 +16,7 @@ RUN dotnet build "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c
 FROM build AS publish
 RUN dotnet publish "src/AV.AvA.BlazorWasmClient/AV.AvA.BlazorWasmClient.csproj" -c Release -o /app/publish --no-restore /p:RunAOTCompilation=$AOT
 
-FROM fholzer/nginx-brotli:latest AS final
+FROM ghcr.io/georg-jung/nginx-brotli:latest AS final
 WORKDIR /usr/share/nginx/html
 COPY --from=publish /app/publish/wwwroot .
 COPY "src/AV.AvA.BlazorWasmClient/nginx.conf" /etc/nginx/nginx.conf
