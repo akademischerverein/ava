@@ -1,0 +1,61 @@
+name: Regular base image update check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 1 * * *'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  check_base_image_updated:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    outputs:
+      image-needs-updating: ${{ steps.check1.outputs.needs-updating == 'true' || steps.check2.outputs.needs-updating == 'true' || steps.check3.outputs.needs-updating == 'true' }}
+      build-ref: ${{ steps.latestrelease.outputs.releasetag }}
+    steps:
+      - name: "Docker Image Update Checker: BlazorWasmClient"
+        id: check1
+        uses: georg-jung/docker-image-update-checker@main
+        with:
+          base-image: georgjung/nginx-brotli:latest
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-wasm:latest
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          verbose: true
+      - name: "Docker Image Update Checker: StorageBackend"
+        id: check2
+        uses: georg-jung/docker-image-update-checker@main
+        with:
+          base-image: mcr.microsoft.com/dotnet/aspnet:7.0
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-storagebackend:latest
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          verbose: true
+      - name: "Docker Image Update Checker: BackupTool"
+        id: check3
+        uses: georg-jung/docker-image-update-checker@main
+        with:
+          base-image: mcr.microsoft.com/dotnet/runtime:7.0
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backuptool:latest
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          verbose: true
+      - name: get latest release with tag
+        id: latestrelease
+        run: |
+          echo "releasetag=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s ${{ github.api_url }}/repos/${{ github.repository }}/releases/latest | jq '.tag_name' | sed 's/\"//g')" \
+             >> $GITHUB_OUTPUT
+        if: steps.check1.outputs.needs-updating == 'true' || steps.check2.outputs.needs-updating == 'true' || steps.check3.outputs.needs-updating == 'true'
+      - name: echo release tag
+        run: |
+          echo ${{ steps.latestrelease.outputs.releasetag }}
+        if: steps.check1.outputs.needs-updating == 'true' || steps.check2.outputs.needs-updating == 'true' || steps.check3.outputs.needs-updating == 'true'
+  call_rebuild:
+    needs: check_base_image_updated
+    if: ${{ needs.check_base_image_updated.outputs.image-needs-updating == 'true' }}
+    uses: ./.github/workflows/release-docker-push.yml
+    with:
+      build-ref: ${{ needs.check_base_image_updated.outputs.build-ref }}

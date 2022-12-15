@@ -1,6 +1,11 @@
 name: Release with Docker Push
 
 on:
+  workflow_call:
+    inputs:
+      build-ref:
+        required: false
+        type: string
   release:
     types: [published]
 
@@ -15,6 +20,7 @@ jobs:
       dockerfile: ./src/AV.AvA.BlazorWasmClient/Dockerfile
       container-name-suffix: wasm
       push: true
+      build-ref: ${{ inputs.build-ref }}
       build-args: |
         AOT=true
   backend:
@@ -23,9 +29,11 @@ jobs:
       dockerfile: ./src/AV.AvA.StorageBackend/Dockerfile
       container-name-suffix: storagebackend
       push: true
+      build-ref: ${{ inputs.build-ref }}
   backuptool:
     uses: ./.github/workflows/docker-build-and-push.yml
     with:
       dockerfile: ./src/AV.AvA.BackupTool/Dockerfile
       container-name-suffix: backuptool
       push: true
+      build-ref: ${{ inputs.build-ref }}
