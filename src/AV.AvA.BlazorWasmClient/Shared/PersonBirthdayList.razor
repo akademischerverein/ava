@@ -27,7 +27,7 @@
                 <td>@context.Person.Geburtsdatum?.ToString(deDe.DateTimeFormat.ShortDatePattern, deDe)</td>
                 <td>@(context.Person.Geburtsdatum?.Minus(_referenceDate).Years * -1)</td>
                 <td>@(context.Person.Geburtsdatum?.PlusYears(_referenceDate.Year * -1).Year * -1)</td>
-                <td><MudIconButton Href=@DetailUrl(context) Icon="@Icons.Filled.ReadMore" Edge="Edge.Start" Size="Size.Small" Class="mx-3" /></td>
+                <td><MudIconButton Href=@DetailUrl(context) Icon="@Icons.Material.Filled.ReadMore" Edge="Edge.Start" Size="Size.Small" Class="mx-3" /></td>
             </tr>
         </Virtualize>
     </tbody>
