@@ -1,4 +1,7 @@
-﻿@using AV.AvA.BlazorWasmClient.Models
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Services;
+@using System.Reflection;
+
+@using AV.AvA.BlazorWasmClient.Models
 @using AV.AvA.BlazorWasmClient.Services
 @using AV.AvA.Model
 @using AutoMapper
@@ -7,6 +10,8 @@
 @inject IPersonVersionAccessor pva
 @inject IMapper mapper
 @inject IClock clock
+@inject LazyAssemblyLoader AssemblyLoader
+@inject ILogger<App> Logger
 
 <div class="ma-8">
     <FileDownload @ref="currentRecordDownload" FileNameFactory="@(() => $"AvaExportList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.xlsx")" StreamFactory="GetCurrentRecordsXlsxStream" />
@@ -28,15 +33,34 @@
 </div>
 
 @code {
+    private readonly string[] lazyLoadAssemblies = new[]
+    {
+        "ClosedXML.dll",
+        "DocumentFormat.OpenXml.dll",
+        "ExcelNumberFormat.dll",
+        "System.IO.Packaging.dll",
+        "XLParser.dll",
+        "SixLabors.Fonts.dll",
+    };
+
+    private Task? lazyLoadAssembliesTask;
+
     private FileDownload? currentRecordDownload;
     private FileDownload? emailListDownload;
     private FileDownload? birthdayListDownload;
 
-    private Task TriggerCurrentRecordDownload() => currentRecordDownload!.TriggerDownloadAsync();
+    private Task TriggerCurrentRecordDownload() => TriggerDownload(currentRecordDownload!);
 
-    private Task TriggerEmailListDownload() => emailListDownload!.TriggerDownloadAsync();
+    private Task TriggerEmailListDownload() => TriggerDownload(emailListDownload!);
 
-    private Task TriggerBirthdayListDownload() => birthdayListDownload!.TriggerDownloadAsync();
+    private Task TriggerBirthdayListDownload() => TriggerDownload(birthdayListDownload!);
+
+    private async Task TriggerDownload(FileDownload dwl)
+    {
+        _ = lazyLoadAssembliesTask ?? throw new InvalidOperationException("Lazy loading task not initialized");
+        await lazyLoadAssembliesTask;
+        await dwl.TriggerDownloadAsync();
+    }
 
     private Stream GetXlsxStream<T>(IEnumerable<T> data, string worksheetName)
     {
@@ -80,4 +104,23 @@
     private Task<Stream> GetBirthdayListXlsxStream() => GetXlsxStream<XlsxBirthdayListExportModel>(
         $"AvA Geburtstage {DateTime.Now:yyyy-MM-dd}",
         pvs => pvs.OrderBy(pv => pv.Person.Geburtsdatum));
+
+    protected override void OnInitialized()
+    {
+        lazyLoadAssembliesTask = LazyLoadDependencyAssemblies();
+        base.OnInitialized();
+    }
+
+    private async Task LazyLoadDependencyAssemblies()
+    {
+        try
+        {
+            var assemblies = await AssemblyLoader.LoadAssembliesAsync(lazyLoadAssemblies);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError("Error: {Message}", ex.Message);
+            throw;
+        }
+    }
 }

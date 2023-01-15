@@ -36,6 +36,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- direct and indirect dependencies of ClosedXML -->
+    <!-- see also: XlsxExportSelection.razor -->
+    <BlazorWebAssemblyLazyLoad Include="ClosedXML.dll" />
+    <BlazorWebAssemblyLazyLoad Include="DocumentFormat.OpenXml.dll" />
+    <BlazorWebAssemblyLazyLoad Include="ExcelNumberFormat.dll" />
+    <BlazorWebAssemblyLazyLoad Include="System.IO.Packaging.dll" />
+    <BlazorWebAssemblyLazyLoad Include="XLParser.dll" />
+    <BlazorWebAssemblyLazyLoad Include="SixLabors.Fonts.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AV.AvA.Common\AV.AvA.Common.csproj" />
     <ProjectReference Include="..\AV.AvA.Model\AV.AvA.Model.csproj" />
   </ItemGroup>
