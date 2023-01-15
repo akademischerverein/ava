@@ -7,6 +7,7 @@
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <RunAOTCompilation Condition=" '$(RunAOTCompilation)' == 'true' ">true</RunAOTCompilation>
     <PublishTrimmed>true</PublishTrimmed>
+    <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
   </PropertyGroup>
 
   <ItemGroup>
