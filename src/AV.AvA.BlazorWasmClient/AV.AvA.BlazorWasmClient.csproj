@@ -17,6 +17,7 @@
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="ClosedXML" Version="0.97.0" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Google.Protobuf" Version="3.21.12" />
     <PackageReference Include="Grpc.Net.Client" Version="2.51.0" />
     <PackageReference Include="Grpc.Net.Client.Web" Version="2.51.0" />
@@ -39,6 +40,7 @@
     <!-- direct and indirect dependencies of ClosedXML -->
     <!-- see also: XlsxExportSelection.razor -->
     <BlazorWebAssemblyLazyLoad Include="ClosedXML.dll" />
+    <BlazorWebAssemblyLazyLoad Include="CsvHelper.dll" />
     <BlazorWebAssemblyLazyLoad Include="DocumentFormat.OpenXml.dll" />
     <BlazorWebAssemblyLazyLoad Include="ExcelNumberFormat.dll" />
     <BlazorWebAssemblyLazyLoad Include="System.IO.Packaging.dll" />

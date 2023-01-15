@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Components.WebAssembly.Services;
+﻿@using CsvHelper;
+@using Microsoft.AspNetCore.Components.WebAssembly.Services;
 @using System.Reflection;
 
 @using AV.AvA.BlazorWasmClient.Models
@@ -14,19 +15,27 @@
 @inject ILogger<App> Logger
 
 <div class="ma-8">
-    <FileDownload @ref="currentRecordDownload" FileNameFactory="@(() => $"AvaExportList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.xlsx")" StreamFactory="GetCurrentRecordsXlsxStream" />
+    <div class="mb-4">
+        Dateiformat für Export:
+        <MudChipSet @bind-SelectedChip="selectedFormatChip" Filter="true" Mandatory="true">
+            <MudChip Text="xlsx" Default="true">XLSX</MudChip>
+            <MudChip Text="csv">CSV</MudChip>
+        </MudChipSet>
+    </div>
+
+    <FileDownload @ref="currentRecordDownload" FileNameFactory="@(() => $"AvaExportList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.{fileExt}")" StreamFactory="GetCurrentRecordsExcelStream" />
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerCurrentRecordDownload" Class="mb-4">
         Aktuellen Stand exportieren
     </MudButton>
     <br />
 
-    <FileDownload @ref="emailListDownload" FileNameFactory="@(() => $"AvaEmailList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.xlsx")" StreamFactory="GetEmailListXlsxStream" />
+    <FileDownload @ref="emailListDownload" FileNameFactory="@(() => $"AvaEmailList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.{fileExt}")" StreamFactory="GetEmailListExcelStream" />
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerEmailListDownload" Class="mb-4">
         E-Mail-Liste exportieren
     </MudButton>
     <br />
 
-    <FileDownload @ref="birthdayListDownload" FileNameFactory="@(() => $"AvaBirthdayList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.xlsx")" StreamFactory="GetBirthdayListXlsxStream" />
+    <FileDownload @ref="birthdayListDownload" FileNameFactory="@(() => $"AvaBirthdayList_{DateTime.Now:yyy-MM-dd_HH-mm-ss}.{fileExt}")" StreamFactory="GetBirthdayListExcelStream" />
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" OnClick="TriggerBirthdayListDownload" Class="mb-4">
         Geburtstagsliste exportieren
     </MudButton>
@@ -41,9 +50,20 @@
         "System.IO.Packaging.dll",
         "XLParser.dll",
         "SixLabors.Fonts.dll",
+        "CsvHelper.dll"
     };
 
     private Task? lazyLoadAssembliesTask;
+
+    private MudChip? selectedFormatChip;
+
+    private string? fileExt => selectedFormatChip?.Text switch
+    {
+        "xlsx" => "xlsx",
+        "csv" => "csv",
+        null => null,
+        _ => throw new NotImplementedException(),
+    };
 
     private FileDownload? currentRecordDownload;
     private FileDownload? emailListDownload;
@@ -62,16 +82,32 @@
         await dwl.TriggerDownloadAsync();
     }
 
-    private Stream GetXlsxStream<T>(IEnumerable<T> data, string worksheetName)
+    private Stream GetExcelStream<T>(IEnumerable<T> data, string worksheetName)
     {
         // this is a factory, don't dispose
         var ms = new MemoryStream();
-        using var workbook = new XLWorkbook();
 
-        var worksheet = workbook.Worksheets.Add(worksheetName);
-        worksheet.Cell(1, 1).InsertTable(data);
+        void SaveXlsx()
+        {
+            using var workbook = new XLWorkbook();
 
-        workbook.SaveAs(ms);
+            var worksheet = workbook.Worksheets.Add(worksheetName);
+            worksheet.Cell(1, 1).InsertTable(data);
+
+            workbook.SaveAs(ms);
+        }
+
+        void SaveCsv()
+        {
+            using var writer = new StreamWriter(ms, System.Text.Encoding.UTF8, leaveOpen: true);
+            using var csv = new CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture);
+            csv.WriteRecords(data);
+        }
+
+        if (selectedFormatChip?.Text == "xlsx") SaveXlsx();
+        else if (selectedFormatChip?.Text == "csv") SaveCsv();
+        else throw new NotImplementedException();
+
         ms.Seek(0, SeekOrigin.Begin);
         return ms;
     }
@@ -83,13 +119,13 @@
         var recs = await pva.GetCurrentAsync();
         IEnumerable<PersonVersion> pvs = transform == null ? recs : transform(recs);
         var xlsxModels = pvs.Select(r => mapper.Map<T>(r));
-        return GetXlsxStream(xlsxModels, worksheetName);
+        return GetExcelStream(xlsxModels, worksheetName);
     }
 
-    private Task<Stream> GetCurrentRecordsXlsxStream()
+    private Task<Stream> GetCurrentRecordsExcelStream()
         => GetXlsxStream<DefaultXlsxExportModel>($"AvA Export {DateTime.Now:yyyy-MM-dd}");
 
-    private async Task<Stream> GetEmailListXlsxStream()
+    private async Task<Stream> GetEmailListExcelStream()
     {
         var now = clock.GetCurrentInstant();
         var recs = await pva.GetCurrentAsync();
@@ -98,10 +134,10 @@
             (x.e.GueltigVon?.ToInstant() ?? Instant.MinValue) <= now &&
             (x.e.GueltigBis?.ToInstant() ?? Instant.MaxValue) >= now);
         var xlsxModels = valid.Select(r => mapper.Map<XlsxEmailExportModel>(r));
-        return GetXlsxStream(xlsxModels, $"AvA E-Mail Export {DateTime.Now:yyyy-MM-dd}");
+        return GetExcelStream(xlsxModels, $"AvA E-Mail Export {DateTime.Now:yyyy-MM-dd}");
     }
 
-    private Task<Stream> GetBirthdayListXlsxStream() => GetXlsxStream<XlsxBirthdayListExportModel>(
+    private Task<Stream> GetBirthdayListExcelStream() => GetXlsxStream<XlsxBirthdayListExportModel>(
         $"AvA Geburtstage {DateTime.Now:yyyy-MM-dd}",
         pvs => pvs.OrderBy(pv => pv.Person.Geburtsdatum));
 
