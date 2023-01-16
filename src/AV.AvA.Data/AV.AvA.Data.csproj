@@ -17,7 +17,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="7.0.1" />
     <PackageReference Include="Npgsql.NodaTime" Version="7.0.1" />
-    <PackageReference Include="EFCore.NamingConventions" Version="7.0.0" />
+    <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
