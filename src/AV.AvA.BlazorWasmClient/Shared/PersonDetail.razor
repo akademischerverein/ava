@@ -64,6 +64,11 @@
             <MudListSubheader>
                 <MudText Typo="Typo.h6">Akademischer Verein</MudText>
             </MudListSubheader>
+
+            <MudListItem Icon="@Icons.Material.Filled.Person">
+                AV-ID @PersonVersion.AvId
+            </MudListItem>
+
             @if (!string.IsNullOrEmpty(PersonVersion.Person.Kolonie))
             {
                 <MudListItem Icon="@Icons.Material.Filled.LocationOn">
