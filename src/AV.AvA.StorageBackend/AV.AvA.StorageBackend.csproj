@@ -24,7 +24,7 @@
     <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
     <PackageReference Include="NodaTime.Serialization.Protobuf" Version="2.0.0" />
-    <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
