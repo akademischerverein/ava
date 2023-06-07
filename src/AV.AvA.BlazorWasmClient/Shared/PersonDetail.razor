@@ -65,78 +65,81 @@
                 <MudText Typo="Typo.h6">Akademischer Verein</MudText>
             </MudListSubheader>
 
-            <MudListItem Icon="@Icons.Material.Filled.Person">
-                AV-ID @PersonVersion.AvId
-            </MudListItem>
+            <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4">
+                <div class="flex-initial">
 
-            @if (!string.IsNullOrEmpty(PersonVersion.Person.Kolonie))
-            {
-                <MudListItem Icon="@Icons.Material.Filled.LocationOn">
-                    Kolonie @PersonVersion.Person.Kolonie
-                </MudListItem>
-            }
-            @if (PersonVersion.Person.Debitorennummer.HasValue)
-            {
-                <MudListItem Icon="@Icons.Material.Filled.Payment">
-                    Debitorennummer @PersonVersion.Person.Debitorennummer
-                </MudListItem>
-            }
+                    <MudListItem Icon="@Icons.Material.Filled.Person">
+                        AV-ID @PersonVersion.AvId
+                    </MudListItem>
 
-            @{
-                var StatusOMAvEv = PersonVersion.Person.Status.Find((s) => (s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedAVeV || s.Typ == StatusEreignisTyp.Uebertritt));
-                var StatusOMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedHG);
-                var StatusOMHGStimmR = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.StimmrechtHGErhalten);
-            }
+                    @if (!string.IsNullOrEmpty(PersonVersion.Person.Kolonie))
+                    {
+                        <MudListItem Icon="@Icons.Material.Filled.LocationOn">
+                            Kolonie @PersonVersion.Person.Kolonie
+                        </MudListItem>
+                    }
+                    @if (PersonVersion.Person.Debitorennummer.HasValue)
+                    {
+                        <MudListItem Icon="@Icons.Material.Filled.Payment">
+                            Debitorennummer @PersonVersion.Person.Debitorennummer
+                        </MudListItem>
+                    }
 
-            @if (StatusOMAvEv != null)
-            {
-                <PersonStatusListItem Ereignis=@StatusOMAvEv Verein="Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied" />
-            }
-            @if (StatusOMHG != null)
-            {
-                if (StatusOMHGStimmR != null)
-                {
-                    <PersonStatusListItem Ereignis=@StatusOMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied mit Stimmrecht" />
-                }
-                else
-                {
-                    <PersonStatusListItem Ereignis=@StatusOMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied" />
-                }
-            }
-            @if ((StatusOMAvEv == null) && (StatusOMHG == null))
-            {
-                var StatusSMAVeV = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedAVeV);
-                var StatusSMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedHG);
-                @if (StatusSMAVeV != null)
-                {
-                    <PersonStatusListItem Ereignis=@StatusSMAVeV Verein="Akademischer Verein Darmstadt e.V." Zustand="studentisches Mitglied" />
-                }
-                @if (StatusSMHG != null)
-                {
-                    <PersonStatusListItem Ereignis=@StatusSMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="studentisches Mitglied" />
-                }
+                    @{
+                        var StatusOMAvEv = PersonVersion.Person.Status.Find((s) => (s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedAVeV || s.Typ == StatusEreignisTyp.Uebertritt));
+                        var StatusOMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittOrdentlichesMitgliedHG || s.Typ == StatusEreignisTyp.Uebertritt);
+                        var StatusOMHGStimmR = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.StimmrechtHGErhalten);
+                    }
 
-                var StatusVoMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VollmitgliedAufgenommen);
-                var StatusJuMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.JungmitgliedEingesungen);
-                var StatusVerk = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VerkehrsgastAufgenommen);
+                    @if (StatusOMAvEv != null)
+                    {
+                        <PersonStatusListItem Ereignis=@StatusOMAvEv Verein="Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied" />
+                    }
+                    @if (StatusOMHG != null)
+                    {
+                        if (StatusOMHGStimmR != null)
+                        {
+                            <PersonStatusListItem Ereignis=@StatusOMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied mit Stimmrecht" />
+                        }
+                        else
+                        {
+                            <PersonStatusListItem Ereignis=@StatusOMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="ordentliches Mitglied" />
+                        }
+                    }
+                    @if ((StatusOMAvEv == null) && (StatusOMHG == null))
+                    {
+                        var StatusSMAVeV = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedAVeV);
+                        var StatusSMHG = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.EintrittStudentischesMitgliedHG);
+                        @if (StatusSMAVeV != null)
+                        {
+                            <PersonStatusListItem Ereignis=@StatusSMAVeV Verein="Akademischer Verein Darmstadt e.V." Zustand="studentisches Mitglied" />
+                        }
+                        @if (StatusSMHG != null)
+                        {
+                            <PersonStatusListItem Ereignis=@StatusSMHG Verein="Hausgesellschaft Akademischer Verein Darmstadt e.V." Zustand="studentisches Mitglied" />
+                        }
 
-                @if (StatusVoMi != null)
-                {
-                    <PersonStatusListItem Ereignis=@StatusVoMi Verein="Akademischer Verein an der TU Darmstadt" Zustand="Vollmitglied" />
-                }
-                else if (StatusJuMi != null)
-                {
-                    <PersonStatusListItem Ereignis=@StatusJuMi Verein="Akademischer Verein an der TU Darmstadt" Zustand="Jungmitglied" />
-                }
-                else if (StatusVerk != null)
-                {
-                    <PersonStatusListItem Ereignis=@StatusVerk Verein="Akademischer Verein an der TU Darmstadt" Zustand="Verkehrsgast" />
-                }
+                        var StatusVoMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VollmitgliedAufgenommen);
+                        var StatusJuMi = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.JungmitgliedEingesungen);
+                        var StatusVerk = PersonVersion.Person.Status.Find((s) => s.Typ == StatusEreignisTyp.VerkehrsgastAufgenommen);
 
-            }
-            <MudListItem Class="ml-n3 mt-n3">
-                <div class="d-flex flex-row justify-start">
-                    <MudTable Items="@PersonVersion.Person.Status" Hover="true" Striped="true" Dense="true" Elevation="0" Class="mr">
+                        @if (StatusVoMi != null)
+                        {
+                            <PersonStatusListItem Ereignis=@StatusVoMi Verein="Akademischer Verein an der TU Darmstadt" Zustand="Vollmitglied" />
+                        }
+                        else if (StatusJuMi != null)
+                        {
+                            <PersonStatusListItem Ereignis=@StatusJuMi Verein="Akademischer Verein an der TU Darmstadt" Zustand="Jungmitglied" />
+                        }
+                        else if (StatusVerk != null)
+                        {
+                            <PersonStatusListItem Ereignis=@StatusVerk Verein="Akademischer Verein an der TU Darmstadt" Zustand="Verkehrsgast" />
+                        }
+
+                    }
+                </div>
+                <div class="flex-initial mt-n2">
+                    <MudTable Items="@PersonVersion.Person.Status" Hover="true" Striped="true" Dense="false" Elevation="0" Class="mr">
                         <HeaderContent>
                             <MudTh><MudTableSortLabel SortBy=@SortStatusDatum InitialDirection="SortDirection.Ascending">Datum</MudTableSortLabel></MudTh>
                             <MudTh>Ereignis</MudTh>
@@ -153,9 +156,8 @@
                             </MudTd>
                         </RowTemplate>
                     </MudTable>
-                    <MudSpacer />
                 </div>
-            </MudListItem>
+            </div>
         </MudList>
     </MudCardContent>
 </MudCard>
